@@ -11,22 +11,22 @@ namespace WeatherAPI.DTOs
         public double Longitude { get; set; }
 
         [JsonProperty("generationtime_ms")]
-        public double GenerationtimeMs { get; set; }
+        public double Generationtime_Ms { get; set; }
 
         [JsonProperty("utc_offset_seconds")]
-        public int UtcOffsetSeconds { get; set; }
+        public int UTC_Offset_Seconds { get; set; }
 
         [JsonProperty("timezone")]
         public string? Timezone { get; set; }
 
         [JsonProperty("timezone_abbreviation")]
-        public string? TimezoneAbbreviation { get; set; }
+        public string? TimeZone_Abbreviation { get; set; }
 
         [JsonProperty("elevation")]
         public double Elevation { get; set; }
 
         [JsonProperty("hourly_units")]
-        public HourlyUnits? HourlyUnits { get; set; }
+        public HourlyUnitsDTO? Hourly_Units { get; set; }
 
         [JsonProperty("hourly")]
         public Hourly? Hourly { get; set; }
@@ -37,15 +37,15 @@ namespace WeatherAPI.DTOs
         public List<string>? Time { get; set; }
 
         [JsonProperty("temperature_2m")]
-        public List<double>? Temperature2m { get; set; }
+        public List<double>? Temperature_2m { get; set; }
     }
 
-    public class HourlyUnits
+    public class HourlyUnitsDTO
     {
         [JsonProperty("time")]
         public string? Time { get; set; }
 
         [JsonProperty("temperature_2m")]
-        public string? Temperature2m { get; set; }
+        public string? Temperature_2m { get; set; }
     }
 }
