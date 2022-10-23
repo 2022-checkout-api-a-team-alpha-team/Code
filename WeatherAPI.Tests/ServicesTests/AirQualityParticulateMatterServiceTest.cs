@@ -79,10 +79,10 @@ namespace WeatherAPI.Tests.ServicesTests
                 .Including(flds => flds.Latitude)
                 .Including(flds => flds.Longitude)
                 .Including(flds => flds.TimeZone)
-                .Including(flds => flds.TimeZoneAbbreviation)
-                .Including(flds => flds.HourlyUnits.Time)
-                .Including(flds => flds.HourlyUnits.PM10)
-                .Including(flds => flds.HourlyUnits.PM2_5)
+                .Including(flds => flds.TimeZone_Abbreviation)
+                .Including(flds => flds.Hourly_Units.Time)
+                .Including(flds => flds.Hourly_Units.PM10)
+                .Including(flds => flds.Hourly_Units.PM2_5)
                 );
         }
 
@@ -98,10 +98,10 @@ namespace WeatherAPI.Tests.ServicesTests
                 .Including(flds => flds.Latitude)
                 .Including(flds => flds.Longitude)
                 .Including(flds => flds.TimeZone)
-                .Including(flds => flds.TimeZoneAbbreviation)
-                .Including(flds => flds.HourlyUnits.Time)
-                .Including(flds => flds.HourlyUnits.PM10)
-                .Including(flds => flds.HourlyUnits.PM2_5)
+                .Including(flds => flds.TimeZone_Abbreviation)
+                .Including(flds => flds.Hourly_Units.Time)
+                .Including(flds => flds.Hourly_Units.PM10)
+                .Including(flds => flds.Hourly_Units.PM2_5)
                 );
         }
     }
