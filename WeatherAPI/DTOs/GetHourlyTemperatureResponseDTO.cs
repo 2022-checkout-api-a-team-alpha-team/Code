@@ -26,7 +26,7 @@ namespace WeatherAPI.DTOs
         public double Elevation { get; set; }
 
         [JsonProperty("hourly_units")]
-        public HourlyUnitsDTO? Hourly_Units { get; set; }
+        public HourlyUnitsForTempDTO? Hourly_Units { get; set; }
 
         [JsonProperty("hourly")]
         public Hourly? Hourly { get; set; }
@@ -40,7 +40,7 @@ namespace WeatherAPI.DTOs
         public List<double>? Temperature_2m { get; set; }
     }
 
-    public class HourlyUnitsDTO
+    public class HourlyUnitsForTempDTO
     {
         [JsonProperty("time")]
         public string? Time { get; set; }
