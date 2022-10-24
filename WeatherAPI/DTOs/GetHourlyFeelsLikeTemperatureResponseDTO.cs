@@ -2,7 +2,7 @@
 
 namespace WeatherAPI.DTOs
 {
-    public class GetHourlyTemperatureResponseDTO
+    public class GetHourlyFeelsLikeTemperatureResponseDTO
     {
         [JsonProperty("latitude")]
         public double Latitude { get; set; }
@@ -11,41 +11,48 @@ namespace WeatherAPI.DTOs
         public double Longitude { get; set; }
 
         [JsonProperty("generationtime_ms")]
-        public double Generationtime_Ms { get; set; }
+        public double GenerationtimeMs { get; set; }
 
         [JsonProperty("utc_offset_seconds")]
-        public int UTC_Offset_Seconds { get; set; }
+        public int UtcOffsetSeconds { get; set; }
 
         [JsonProperty("timezone")]
         public string? Timezone { get; set; }
 
         [JsonProperty("timezone_abbreviation")]
-        public string? TimeZone_Abbreviation { get; set; }
+        public string? TimezoneAbbreviation { get; set; }
 
         [JsonProperty("elevation")]
         public double Elevation { get; set; }
 
         [JsonProperty("hourly_units")]
-        public HourlyUnitsForTempDTO? Hourly_Units { get; set; }
+        public FeelsLikeTemperatureHourlyUnitsDTO? Hourly_Units { get; set; }
 
         [JsonProperty("hourly")]
-        public Hourly? Hourly { get; set; }
+        public FeelsLikeTemperatureHourlyDTO? Hourly { get; set; }
     }
-    public class Hourly
+
+    public class FeelsLikeTemperatureHourlyDTO
     {
         [JsonProperty("time")]
         public List<string>? Time { get; set; }
 
         [JsonProperty("temperature_2m")]
         public List<double>? Temperature_2m { get; set; }
+
+        [JsonProperty("apparent_temperature")]
+        public List<double>? Apparent_Temperature { get; set; }
     }
 
-    public class HourlyUnitsForTempDTO
+    public class FeelsLikeTemperatureHourlyUnitsDTO
     {
         [JsonProperty("time")]
         public string? Time { get; set; }
 
         [JsonProperty("temperature_2m")]
         public string? Temperature_2m { get; set; }
-    }   
+
+        [JsonProperty("apparent_temperature")]
+        public string? Apparent_Temperature { get; set; }
+    }
 }

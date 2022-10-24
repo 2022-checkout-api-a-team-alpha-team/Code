@@ -9,6 +9,7 @@ namespace WeatherAPI.Controllers
     public class WeatherController : ControllerBase
     {
         private IWeatherService _service;
+        
         public WeatherController(IWeatherService service)
         {
             _service = service;
@@ -25,6 +26,13 @@ namespace WeatherAPI.Controllers
         public async Task<IActionResult> GetHourlyTemperatureByCity(string cityName)
         {
             var response = await _service.GetHourlyTemperatureByCity(cityName);
+            return Ok(response);
+        }
+
+        [HttpGet("feelsLikeTemperature/{cityName}")]
+        public async Task<IActionResult> GetHourlyFeelsLikeTemperatureByCity(string cityName)
+        {
+            var response = await _service.GetHourlyFeelsLikeTemperatureByCity(cityName);
             return Ok(response);
         }
     }
