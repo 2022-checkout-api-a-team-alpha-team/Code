@@ -15,14 +15,7 @@ namespace WeatherAPI.Controllers
             _service = service;
         }
 
-        [HttpGet("{latitude}/{longitude}")]
-        public async Task<IActionResult> GetHourlyTemperatureByLatitudeAndLongitude(double latitude, double longitude)
-        {
-            var response = await _service.GetHourlyTemperatureByLatitudeAndLongitude(latitude,longitude);
-            return Ok(response);
-        }
-
-        [HttpGet("{cityName}")]
+        [HttpGet("hourlyTemperature/{cityName}")]
         public async Task<IActionResult> GetHourlyTemperatureByCity(string cityName)
         {
             var response = await _service.GetHourlyTemperatureByCity(cityName);

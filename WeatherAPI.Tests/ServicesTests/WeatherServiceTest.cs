@@ -21,6 +21,20 @@ namespace WeatherAPI.Tests.ServicesTests
         }
 
         [Test]
+        public void Get_Hourly_Temperature_By_Latitude_And_Longitude_Return_Type_Is_GetHourlyTemperatureResponseDTO()
+        {
+            var result = _weatherService.GetHourlyTemperatureByLatitudeAndLongitude(51.5, -0.1262).Result;
+            result.Should().BeOfType(typeof(GetHourlyTemperatureResponseDTO));
+        }
+
+        [Test]
+        public void Get_Hourly_Temperature_By_CityName_Return_Type_Is_GetHourlyTemperatureResponseDTO()
+        {
+            var result = _weatherService.GetHourlyTemperatureByCity("London").Result;
+            result.Should().BeOfType(typeof(GetHourlyTemperatureResponseDTO));
+        }
+
+        [Test]
         public void Get_Hourly_Feels_Like_Temperature_By_CityName_Response_Should_Return_Expected_No_Of_Records()
         {
             var result = _weatherService.GetHourlyFeelsLikeTemperatureByCity("London").Result;
