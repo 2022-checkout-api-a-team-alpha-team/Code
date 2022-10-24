@@ -10,9 +10,23 @@ namespace WeatherAPI.Services
     public class WeatherService : IWeatherService
     {
         private HttpClient _httpClient;
+        private GeoService _geoService;
         private const int FEELS_LIKE_TEMP_NO_OF_HOURS = 24;
         FeelsLikeTemperatureForecast feelsLikeTemp;
         List<FeelsLikeTemperatureForecast> feelsLikeTempResult = new();
+
+        public WeatherService()
+        {
+            _httpClient = new HttpClient();
+            _geoService = new GeoService();
+        }
+
+        private readonly JsonSerializerOptions options = new()
+        {
+            PropertyNameCaseInsensitive = true,
+            AllowTrailingCommas = true,
+            DictionaryKeyPolicy = JsonNamingPolicy.CamelCase
+        };
 
         //Dressing suggestions for Feels Like Temperature
         private static readonly string[] feelLikeTemperatureSuggestions = new[]
@@ -21,33 +35,16 @@ namespace WeatherAPI.Services
             "You'll feel hotter than outside - Better to wear light cotton clothes.",
             "You'll feel just the right temperature as in air when you go out. Wear as you like."
         };
-
-        public WeatherService()
-        {
-            _httpClient = new HttpClient();
-        }
+               
         public async Task<GetHourlyTemperatureResponseDTO> GetHourlyTemperatureByLatitudeAndLongitude(double latitude, double longitude)
         {
-            var options = new JsonSerializerOptions()
-            {
-                PropertyNameCaseInsensitive = true,
-                AllowTrailingCommas = true,
-                DictionaryKeyPolicy = JsonNamingPolicy.CamelCase
-            };
             var result = await _httpClient.GetFromJsonAsync<GetHourlyTemperatureResponseDTO>(ConstantsHelper.WEATHER_API_URL.Replace("[latitude]",latitude.ToString().Trim()).Replace("[longitude]", longitude.ToString().Trim()), options);
             return result!;
         }
 
         public async Task<GetHourlyTemperatureResponseDTO> GetHourlyTemperatureByCity(string cityName)
         {
-            var options = new JsonSerializerOptions()
-            {
-                PropertyNameCaseInsensitive = true,
-                AllowTrailingCommas = true,
-                DictionaryKeyPolicy = JsonNamingPolicy.CamelCase
-            };
-
-            var GeoCoordinates = await _httpClient.GetFromJsonAsync<GetGeoCoordResponseDTO>(ConstantsHelper.GEO_API_URL.Replace("[city]", cityName), options);
+            var GeoCoordinates = await _geoService.GetGeoCoordinatesByCityName(cityName);
             double latitude = GeoCoordinates!.Results.ToList()[0].Latitude;
             double longitude = GeoCoordinates.Results.ToList()[0].Longitude;
 
@@ -57,15 +54,7 @@ namespace WeatherAPI.Services
 
         public async Task<List<FeelsLikeTemperatureForecast>> GetHourlyFeelsLikeTemperatureByCity(string cityName)
         {  
-            var options = new JsonSerializerOptions()
-            {
-                PropertyNameCaseInsensitive = true,
-                AllowTrailingCommas = true,
-                DictionaryKeyPolicy = JsonNamingPolicy.CamelCase
-            };
-
             //Getting latitude and longitude values for the city name 
-            GeoService _geoService = new();
             var GeoCoordinates = _geoService.GetGeoCoordinatesByCityName(cityName);
             var latitude = GeoCoordinates.Result.Results.ToList()[0].Latitude;
             var longitude = GeoCoordinates.Result.Results.ToList()[0].Longitude;
