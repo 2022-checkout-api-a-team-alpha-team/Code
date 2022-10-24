@@ -53,15 +53,7 @@ namespace WeatherAPI.Services
 
         public async Task<List<FeelsLikeTemperatureForecast>> GetHourlyFeelsLikeTemperatureByCity(string cityName)
         {  
-            var options = new JsonSerializerOptions()
-            {
-                PropertyNameCaseInsensitive = true,
-                AllowTrailingCommas = true,
-                DictionaryKeyPolicy = JsonNamingPolicy.CamelCase
-            };
-
             //Getting latitude and longitude values for the city name 
-            GeoService _geoService = new();
             var GeoCoordinates = _geoService.GetGeoCoordinatesByCityName(cityName);
             var latitude = GeoCoordinates.Result.Results.ToList()[0].Latitude;
             var longitude = GeoCoordinates.Result.Results.ToList()[0].Longitude;
