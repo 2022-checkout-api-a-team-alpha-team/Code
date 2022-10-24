@@ -1,4 +1,5 @@
 ﻿using WeatherAPI.DTOs;
+using WeatherAPI.Models;
 
 namespace WeatherAPI.Services
 {
@@ -6,5 +7,6 @@ namespace WeatherAPI.Services
     {
         Task<GetHourlyTemperatureResponseDTO> GetHourlyTemperatureByLatitudeAndLongitude(double latitude, double longitude);
         Task<GetHourlyTemperatureResponseDTO> GetHourlyTemperatureByCity(string city);
+        Task<List<FeelsLikeTemperatureForecast>> GetHourlyFeelsLikeTemperatureByCity(string city);
     }
 }
