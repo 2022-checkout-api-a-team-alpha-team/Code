@@ -9,6 +9,7 @@ namespace WeatherAPI.Services
     public class AirQualityParticulateMatterService : IAirQualityParticulateMatterService
     {
         private readonly HttpClient _httpClient;
+        private readonly IGeoService _geoService;
         private readonly JsonSerializerOptions options = new()
         {
             PropertyNameCaseInsensitive = true,
@@ -19,6 +20,7 @@ namespace WeatherAPI.Services
         public AirQualityParticulateMatterService()
         {
             _httpClient = new HttpClient();
+            _geoService = new GeoService();
         }
         
         public async Task<GetAirQualityParticulateMatterResponseDTO> GetAirQualityParticulateMatter(double lat, double lon)
@@ -29,7 +31,6 @@ namespace WeatherAPI.Services
 
         public async Task<GetAirQualityParticulateMatterResponseDTO> GetAirQualityParticulateMatterByCityName(string cityName)
         {
-            GeoService _geoService = new();
             var GeoCoordOfCity = _geoService.GetGeoCoordinatesByCityName(cityName);
             double lat = GeoCoordOfCity.Result.Results.ToList()[0].Latitude;
             double lon = GeoCoordOfCity.Result.Results.ToList()[0].Longitude;
