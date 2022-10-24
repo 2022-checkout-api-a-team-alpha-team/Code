@@ -10,10 +10,16 @@ namespace WeatherAPI.Services
     public class WeatherService : IWeatherService
     {
         private HttpClient _httpClient;
-        private readonly IGeoService _geoService;
+        private GeoService _geoService;
         private const int FEELS_LIKE_TEMP_NO_OF_HOURS = 24;
         FeelsLikeTemperatureForecast feelsLikeTemp;
         List<FeelsLikeTemperatureForecast> feelsLikeTempResult = new();
+
+        public WeatherService()
+        {
+            _httpClient = new HttpClient();
+            _geoService = new GeoService();
+        }
 
         private readonly JsonSerializerOptions options = new()
         {
@@ -29,12 +35,7 @@ namespace WeatherAPI.Services
             "You'll feel hotter than outside - Better to wear light cotton clothes.",
             "You'll feel just the right temperature as in air when you go out. Wear as you like."
         };
-
-        public WeatherService(IGeoService geoService)
-        {
-            _httpClient = new HttpClient();
-            _geoService = geoService;
-        }
+               
         public async Task<GetHourlyTemperatureResponseDTO> GetHourlyTemperatureByLatitudeAndLongitude(double latitude, double longitude)
         {
             var result = await _httpClient.GetFromJsonAsync<GetHourlyTemperatureResponseDTO>(ConstantsHelper.WEATHER_API_URL.Replace("[latitude]",latitude.ToString().Trim()).Replace("[longitude]", longitude.ToString().Trim()), options);
