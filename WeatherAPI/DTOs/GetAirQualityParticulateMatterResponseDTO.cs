@@ -53,8 +53,15 @@ namespace WeatherAPI.DTOs
         [JsonProperty("pm2_5")]
         public List<int?> PM2_5 { get; set; }
 
+    }
 
-        //Pollen section
+
+
+    //Pollen section
+    public class HourlyPollenDTO
+    {
+        public List<string> Time { get; set; }
+
         [JsonPropertyName("alder_pollen")]
         public List<double?> AlderPollen { get; set; }
 

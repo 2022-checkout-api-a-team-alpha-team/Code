@@ -2,6 +2,6 @@
 {
     public class GetPollenDTO
     {
-        public HourlyDTO Hourly { get; set; }
+        public HourlyPollenDTO Hourly { get; set; }
     }
 }
