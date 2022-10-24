@@ -67,7 +67,7 @@ namespace WeatherAPI.Tests.ServicesTests
             _airQualityParticulateMatterService = new AirQualityParticulateMatterService();
         }
 
-        [Test]
+/*        [Test]
         public void Get_Air_Quality_Particulate_Matter_Should_Return_Result()
         {
             var result = _airQualityParticulateMatterService.GetAirQualityParticulateMatter(3.1502, 101.7077).Result;
@@ -84,7 +84,7 @@ namespace WeatherAPI.Tests.ServicesTests
                 .Including(flds => flds.Hourly_Units.PM10)
                 .Including(flds => flds.Hourly_Units.PM2_5)
                 );
-        }
+        }*/
 
         [Test]
         public void Get_Air_Quality_Particulate_Matter_By_City_Name_Should_Return_Result()
