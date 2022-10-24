@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using System.Text.Json;
 using WeatherAPI.DTOs;
+using System.Linq;
 
 namespace WeatherAPI.Services
 {
@@ -33,10 +34,32 @@ namespace WeatherAPI.Services
                     DictionaryKeyPolicy = JsonNamingPolicy.CamelCase
                 };
 
-                var result = await _httpClient.GetFromJsonAsync<GetPollenDTO>(query , options);
+                var result = await _httpClient.GetFromJsonAsync<GetPollenDTO>(query, options);
                 return result;
             }
             return null;
+        }
+
+        public async Task<PollenSuggestionDTO> GetPollenSuggestion(string cityName)
+        {
+            var result = await GetPollenData(cityName);
+            string message = "No pollen in the air.";
+            List<string> pollenNames = new List<string>();
+
+            if (result != null && result.Hourly != null) 
+            {
+                foreach (var keyValuePair in result.Hourly.GetPollens())
+                {
+                    if (keyValuePair.Value.Any(item => item != null && item > 0))
+                    {
+                        pollenNames.Add(keyValuePair.Key);
+                    }
+                }
+            }
+            if (pollenNames.Count > 0)
+                message = $"Be careful in case of allergies, the presence of pollen in the air is possible ({String.Join(",", pollenNames)}).";
+
+            return new PollenSuggestionDTO(message);
         }
     }
 }
