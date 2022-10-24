@@ -14,13 +14,6 @@ namespace WeatherAPI.Controllers
             _service = service;
         }
         
-        [HttpGet("{lat}/{lon}")]
-        public async Task<IActionResult> GetAirQualityParticulateMatter(double lat, double lon)
-        {
-            var response = await _service.GetAirQualityParticulateMatter(lat, lon);
-            return Ok(response);
-        }
-
         [HttpGet("{cityName}")]
         public async Task<IActionResult> GetAirQualityParticulateMatterByCityName(string cityName)
         {

@@ -24,13 +24,13 @@ namespace WeatherAPI.DTOs
         public string TimeZone_Abbreviation { get; set; }
 
         [JsonProperty("hourly_units")]
-        public HourlyUnitsDTO Hourly_Units { get; set; }
+        public AQPMHourlyUnitsDTO Hourly_Units { get; set; }
 
         [JsonProperty("hourly")]
-        public HourlyDTO Hourly { get; set; }
+        public AQPMHourlyDTO Hourly { get; set; }
     }
 
-    public class HourlyUnitsDTO
+    public class AQPMHourlyUnitsDTO
     {
         [JsonProperty("time")]
         public string Time { get; set; }
@@ -42,7 +42,7 @@ namespace WeatherAPI.DTOs
         public string PM2_5 { get; set; }
     }
 
-    public class HourlyDTO
+    public class AQPMHourlyDTO
     {
         [JsonProperty("time")]
         public List<string> Time { get; set; }
@@ -52,26 +52,5 @@ namespace WeatherAPI.DTOs
 
         [JsonProperty("pm2_5")]
         public List<int?> PM2_5 { get; set; }
-
-
-        //Pollen section
-        [JsonPropertyName("alder_pollen")]
-        public List<double?> AlderPollen { get; set; }
-
-        [JsonPropertyName("birch_pollen")]
-        public List<double?> BirchPollen { get; set; }
-
-        [JsonPropertyName("grass_pollen")]
-        public List<double?> GrassPollen { get; set; }
-
-        [JsonPropertyName("mugwort_pollen")]
-        public List<double?> MugwortPollen { get; set; }
-
-        [JsonPropertyName("olive_pollen")]
-        public List<double?> OlivePollen { get; set; }
-
-        [JsonPropertyName("ragweed_pollen")]
-        public List<double?> RagweedPollen { get; set; }
-
     }
 }

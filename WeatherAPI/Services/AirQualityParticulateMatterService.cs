@@ -9,6 +9,7 @@ namespace WeatherAPI.Services
     public class AirQualityParticulateMatterService : IAirQualityParticulateMatterService
     {
         private readonly HttpClient _httpClient;
+        private readonly IGeoService _geoService;
         private readonly JsonSerializerOptions options = new()
         {
             PropertyNameCaseInsensitive = true,
@@ -19,20 +20,16 @@ namespace WeatherAPI.Services
         public AirQualityParticulateMatterService()
         {
             _httpClient = new HttpClient();
+            _geoService = new GeoService();
         }
         
-        public async Task<GetAirQualityParticulateMatterResponseDTO> GetAirQualityParticulateMatter(double lat, double lon)
-        {
-            var result = await _httpClient.GetFromJsonAsync<GetAirQualityParticulateMatterResponseDTO>(ConstantsHelper.AQ_PM_URL.Replace("[lat]", lat.ToString().Trim()).Replace("[lon]", lon.ToString().Trim()), options);
-            return result;
-        }
-
         public async Task<GetAirQualityParticulateMatterResponseDTO> GetAirQualityParticulateMatterByCityName(string cityName)
         {
-            var GeoCoordOfCity = await _httpClient.GetFromJsonAsync<GetGeoCoordResponseDTO>(ConstantsHelper.GEO_API_URL.Replace("[city]", cityName), options);
-            double lat = GeoCoordOfCity.Results.ToList()[0].Latitude;
-            double lon = GeoCoordOfCity.Results.ToList()[0].Longitude;
-            var result = await _httpClient.GetFromJsonAsync<GetAirQualityParticulateMatterResponseDTO>(ConstantsHelper.AQ_PM_URL.Replace("[lat]", lat.ToString().Trim()).Replace("[lon]", lon.ToString().Trim()), options);
+            var GeoCoordOfCity = _geoService.GetGeoCoordinatesByCityName(cityName);
+            double lat = GeoCoordOfCity.Result.Results.ToList()[0].Latitude;
+            double lon = GeoCoordOfCity.Result.Results.ToList()[0].Longitude;
+
+            var result = await _httpClient.GetFromJsonAsync<GetAirQualityParticulateMatterResponseDTO>(ConstantsHelper.AQ_BASE + $"?latitude={lat.ToString().Trim()}&longitude={lon.ToString().Trim()}&hourly=pm10,pm2_5", options);
             return result;
         }
     }
