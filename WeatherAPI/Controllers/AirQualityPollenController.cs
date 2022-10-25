@@ -31,7 +31,7 @@ namespace WeatherAPI.Controllers
             catch (Exception e)
             {
                 Console.WriteLine("Error:" + e.Message);
-                return StatusCode(500, ErrorHelper.SERVER_ERROR);
+                return StatusCode(StatusCodes.Status500InternalServerError, ErrorHelper.SERVER_ERROR);
             }
         }
     }

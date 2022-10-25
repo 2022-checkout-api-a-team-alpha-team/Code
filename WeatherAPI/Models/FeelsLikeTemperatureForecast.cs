@@ -1,4 +1,4 @@
-﻿namespace WeatherAPI.Models
+﻿  namespace WeatherAPI.Models
 {
     public class FeelsLikeTemperatureForecast
     {
