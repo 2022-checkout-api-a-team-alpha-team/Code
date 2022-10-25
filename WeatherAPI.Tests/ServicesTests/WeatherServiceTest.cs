@@ -53,7 +53,7 @@ namespace WeatherAPI.Tests.ServicesTests
                 }
                 else if (record.Temperature > record.FeelsLikeTemperature)
                 {
-                    record.Suggestion.Should().Be("You'll feel colder than outside - Better to wear a jumper/ a jacket.");
+                    record.Suggestion.Should().Be("You'll feel colder than outside - Better to wear a jumper/ a jacket to avoid any chills.");
                 }
                 else
                     record.Suggestion.Should().Be("You'll feel just the right temperature as in air when you go out. Wear as you like.");
