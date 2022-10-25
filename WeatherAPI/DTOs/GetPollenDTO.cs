@@ -1,7 +1,10 @@
-﻿namespace WeatherAPI.DTOs
+﻿using Newtonsoft.Json;
+using System.Text.Json.Serialization;
+
+namespace WeatherAPI.DTOs
 {
     public class GetPollenDTO
     {
-        public HourlyPollenDTO Hourly { get; set; }
+        public GetHourlyPollenDTO Hourly { get; set; }
     }
 }

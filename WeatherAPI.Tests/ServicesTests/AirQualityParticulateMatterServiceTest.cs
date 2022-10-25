@@ -1,12 +1,16 @@
 ﻿using FluentAssertions;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using WeatherAPI.Controllers;
 using WeatherAPI.DTOs;
 using WeatherAPI.Services;
 
@@ -68,13 +72,16 @@ namespace WeatherAPI.Tests.ServicesTests
         }
 
         [Test]
-        public void Get_Air_Quality_Particulate_Matter_Should_Return_Result()
+        public void Get_Air_Quality_Particulate_Matter_By_City_Name_Should_Return_Result_And_In_Correct_Type()
         {
-            var result = _airQualityParticulateMatterService.GetAirQualityParticulateMatter(3.1502, 101.7077).Result;
-            result.Should().BeOfType(typeof(GetAirQualityParticulateMatterResponseDTO));
-
+            // Arrange
             var expected = JsonSerializer.Deserialize<GetAirQualityParticulateMatterResponseDTO>(expectedResultJson, options);
 
+            // Act
+            var result = _airQualityParticulateMatterService.GetAirQualityParticulateMatterByCityName("Kuala Lumpur").Result;
+
+            //Assert
+            result.Should().BeOfType(typeof(GetAirQualityParticulateMatterResponseDTO));
             result.Should().BeEquivalentTo(expected, options => options
                 .Including(flds => flds.Latitude)
                 .Including(flds => flds.Longitude)
@@ -87,22 +94,29 @@ namespace WeatherAPI.Tests.ServicesTests
         }
 
         [Test]
-        public void Get_Air_Quality_Particulate_Matter_By_City_Name_Should_Return_Result()
+        public  async Task Get_Air_Quality_Particulate_Matter_By_City_Name_Should_Return_Result_Via_API()
         {
-            var result = _airQualityParticulateMatterService.GetAirQualityParticulateMatterByCityName("Kuala Lumpur").Result;
-            result.Should().BeOfType(typeof(GetAirQualityParticulateMatterResponseDTO));
+            // Arrange
+            //var expected = JsonSerializer.Deserialize<GetAirQualityParticulateMatterResponseDTO>(expectedResultJson, options);
+            GetAirQualityParticulateMatterResponseDTO expected = new();
 
-            var expected = JsonSerializer.Deserialize<GetAirQualityParticulateMatterResponseDTO>(expectedResultJson, options);
+            Mock<IAirQualityParticulateMatterService> _mockService = new ();
+            _mockService
+                .Setup(repo => repo.GetAirQualityParticulateMatterByCityName("Kuala Lumpur"))
+                .ReturnsAsync(expected);
 
-            result.Should().BeEquivalentTo(expected, options => options
-                .Including(flds => flds.Latitude)
-                .Including(flds => flds.Longitude)
-                .Including(flds => flds.TimeZone)
-                .Including(flds => flds.TimeZone_Abbreviation)
-                .Including(flds => flds.Hourly_Units.Time)
-                .Including(flds => flds.Hourly_Units.PM10)
-                .Including(flds => flds.Hourly_Units.PM2_5)
-                );
+            AirQualityParticulateMatterController _service = new(_mockService.Object);
+
+            // Act
+            var result = await _service.GetAirQualityParticulateMatterByCityName("Kuala Lumpur") as ObjectResult;
+            var actualResult = result.Value;
+
+            // Assert
+            Assert.That(result, Is.TypeOf<OkObjectResult>());
+            Assert.That(actualResult, Is.EqualTo(expected));
+            Assert.AreEqual(HttpStatusCode.OK, (HttpStatusCode)result.StatusCode);
+            _mockService.Verify(c => c.GetAirQualityParticulateMatterByCityName(It.IsAny<string>()), Times.Once());
+            Assert.AreEqual(expected, actualResult);
         }
     }
 }
