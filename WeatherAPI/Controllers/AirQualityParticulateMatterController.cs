@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using WeatherAPI.DTOs;
 using WeatherAPI.Services;
 
 namespace WeatherAPI.Controllers
@@ -8,7 +9,7 @@ namespace WeatherAPI.Controllers
     [ApiController]
     public class AirQualityParticulateMatterController : ControllerBase
     {
-        public IAirQualityParticulateMatterService _service;
+        private IAirQualityParticulateMatterService _service;
         public AirQualityParticulateMatterController(IAirQualityParticulateMatterService service)
         {
             _service = service;
@@ -17,7 +18,15 @@ namespace WeatherAPI.Controllers
         [HttpGet("{cityName}")]
         public async Task<IActionResult> GetAirQualityParticulateMatterByCityName(string cityName)
         {
-            var response = await _service.GetAirQualityParticulateMatterByCityName(cityName);
+            GetAirQualityParticulateMatterResponseDTO response;
+            try
+            {
+                response = await _service.GetAirQualityParticulateMatterByCityName(cityName);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
             return Ok(response);
         }
     }
