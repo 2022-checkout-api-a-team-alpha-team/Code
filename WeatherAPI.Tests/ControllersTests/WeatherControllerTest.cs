@@ -49,11 +49,20 @@ namespace WeatherAPI.Tests.ControllersTests
         public void Get_Hourly_Feels_Like_Temperature_By_City_Should_Return_BadRequest_When_Given_Wrong_Input()
         {
             //Act
-            var response = _weatherController!.GetHourlyFeelsLikeTemperatureByCity("").Result;
+            var response = _weatherController!.GetHourlyFeelsLikeTemperatureByCity(null!).Result;
 
             //Assert
             var badResult = response as BadRequestObjectResult;
-            badResult.Should().BeNull();
+            badResult.Should().NotBeNull();
+            badResult?.StatusCode.Should().Be(400);
+            badResult?.Value!.ToString()!.Equals(ErrorHelper.PARAMETER_CANNOT_BE_NULL_OR_EMPTY).Should().BeTrue();
+
+            //Act
+            response = _weatherController!.GetHourlyFeelsLikeTemperatureByCity("").Result;
+
+            //Assert
+            badResult = response as BadRequestObjectResult;
+            badResult.Should().NotBeNull();
             badResult?.StatusCode.Should().Be(400);
             badResult?.Value!.ToString()!.Equals(ErrorHelper.PARAMETER_CANNOT_BE_NULL_OR_EMPTY).Should().BeTrue();
         }
