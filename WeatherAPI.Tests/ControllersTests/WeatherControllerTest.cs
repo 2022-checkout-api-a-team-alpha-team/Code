@@ -12,15 +12,13 @@ using WeatherAPI.Controllers;
 using WeatherAPI.DTOs;
 using WeatherAPI.Helper;
 using WeatherAPI.Services;
-using WeatherAPI.Models;
-using System.Web.Http;
 
 namespace WeatherAPI.Tests.ControllersTests
 {    
     public class WeatherControllerTest
     {
-        private WeatherController _weatherController;
-        private Mock<IWeatherService> _mockWeatherService;
+        private WeatherController? _weatherController;
+        private Mock<IWeatherService>? _mockWeatherService;
 
         private const int FEELS_LIKE_TEMP_NO_OF_HOURS = 3;
 
@@ -36,10 +34,10 @@ namespace WeatherAPI.Tests.ControllersTests
         public void Get_Hourly_Feels_Like_Temperature_By_City_Should_Return_Ok_When_Given_Right_Input()
         {
             //Arange
-            _mockWeatherService.Setup(g => g.GetHourlyFeelsLikeTemperatureByCity("London")).ReturnsAsync(GetFeelsLikeTemperatureObj());
+            _mockWeatherService!.Setup(g => g.GetHourlyFeelsLikeTemperatureByCity("London")).ReturnsAsync(GetFeelsLikeTemperatureObj());
 
             //Act
-            var response = _weatherController.GetHourlyFeelsLikeTemperatureByCity("London").Result;
+            var response = _weatherController!.GetHourlyFeelsLikeTemperatureByCity("London").Result;
 
             //Assert
             var okResult = response as OkObjectResult;
@@ -50,17 +48,14 @@ namespace WeatherAPI.Tests.ControllersTests
         [Test]
         public void Get_Hourly_Feels_Like_Temperature_By_City_Should_Return_BadRequest_When_Given_Wrong_Input()
         {
-            //Arange
-            _mockWeatherService.Setup(g => g.GetHourlyFeelsLikeTemperatureByCity("London")).ReturnsAsync(GetFeelsLikeTemperatureObj());
-
             //Act
-            var response = _weatherController.GetHourlyFeelsLikeTemperatureByCity("").Result;
+            var response = _weatherController!.GetHourlyFeelsLikeTemperatureByCity("").Result;
 
             //Assert
             var badResult = response as BadRequestObjectResult;
             badResult.Should().BeNull();
             badResult?.StatusCode.Should().Be(400);
-            badResult?.Value.ToString().Equals(ErrorHelper.PARAMETER_CANNOT_BE_NULL_OR_EMPTY).Should().BeTrue();
+            badResult?.Value!.ToString()!.Equals(ErrorHelper.PARAMETER_CANNOT_BE_NULL_OR_EMPTY).Should().BeTrue();
         }
       
         //Dressing suggestions for Feels Like Temperature
@@ -71,13 +66,13 @@ namespace WeatherAPI.Tests.ControllersTests
             public static string FEELS_LIKE_TEMP_JUST_RIGHT = "You'll feel just the right temperature as in air when you go out. Wear as you like.";
         }
 
-        private List<FeelsLikeTemperatureForecast> GetFeelsLikeTemperatureObj()
+        private List<FeelsLikeTempForecastSuggestionsDTO> GetFeelsLikeTemperatureObj()
         {
             List<string>? dateList = new();
             List<double>? temperatureList = new();
             List<double>? feelsLikeTempList = new();
-            FeelsLikeTemperatureForecast feelsLikeTemp;
-            List<FeelsLikeTemperatureForecast> feelsLikeTempResult = new();
+            FeelsLikeTempForecastSuggestionsDTO feelsLikeTemp;
+            List<FeelsLikeTempForecastSuggestionsDTO> feelsLikeTempResult = new();
 
             DateTime date = DateTime.Now;
             dateList.Add(date.ToString());

@@ -1,4 +1,4 @@
-﻿namespace WeatherAPI.Models
+﻿namespace WeatherAPI.DTOs
 {
     public class HourlyTempForeCastAndSuggestions
     {

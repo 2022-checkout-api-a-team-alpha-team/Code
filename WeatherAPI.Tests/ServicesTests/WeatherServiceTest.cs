@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
 using WeatherAPI.DTOs;
-using WeatherAPI.Models;
 using WeatherAPI.Services;
 
 namespace WeatherAPI.Tests.ServicesTests

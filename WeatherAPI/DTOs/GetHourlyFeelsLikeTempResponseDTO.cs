@@ -2,7 +2,7 @@
 
 namespace WeatherAPI.DTOs
 {
-    public class GetHourlyFeelsLikeTemperatureResponseDTO
+    public class GetHourlyFeelsLikeTempResponseDTO
     {
         [JsonProperty("latitude")]
         public double Latitude { get; set; }

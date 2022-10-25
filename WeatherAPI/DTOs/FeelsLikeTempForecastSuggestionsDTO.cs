@@ -1,6 +1,6 @@
-﻿namespace WeatherAPI.Models
+﻿namespace WeatherAPI.DTOs
 {
-    public class FeelsLikeTemperatureForecast
+    public class FeelsLikeTempForecastSuggestionsDTO
     {
         public string? Date { get; set; }
 
