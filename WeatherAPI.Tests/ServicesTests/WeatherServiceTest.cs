@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
 using WeatherAPI.DTOs;
+using WeatherAPI.Helper;
 using WeatherAPI.Models;
 using WeatherAPI.Services;
 
@@ -39,7 +40,7 @@ namespace WeatherAPI.Tests.ServicesTests
         public void Get_Hourly_Temperature_By_CityName_Should_Return_Type_List_Of_HourlyTempForeCastAndSuggestions()
         {
             var result = _weatherService.GetHourlyTemperatureByCity("London").Result;
-            result.Should().BeOfType(typeof(List<HourlyTempForeCastAndSuggestions>));
+            result.Should().BeOfType(typeof(List<HourlyTempForeCastAndSuggestionsDTO>));
         }
 
         [Test]
@@ -48,16 +49,16 @@ namespace WeatherAPI.Tests.ServicesTests
             var result = _weatherService.GetHourlyTemperatureByCity("London").Result;
             foreach (var record in result)
             {
-                if (record.AverargeTemperature > 30)
+                if (record.AverargeTemperature > 23)
                 {
-                    record.Suggestion.Should().Be("Its too Hot. Please plan your days/trip with proper Accessories and Appropriate Activities.");
+                    record.Suggestion.Should().Be(HourlyTemperatureSuggestions.FEELS_HOT);
                 }
                 else if (record.AverargeTemperature < 16)
                 {
-                    record.Suggestion.Should().Be("Its too Cold. Please plan your days/trip with proper Accessories and Appropriate Activities.");
+                    record.Suggestion.Should().Be(HourlyTemperatureSuggestions.FEELS_COLD);
                 }
                 else
-                    record.Suggestion.Should().Be("The days are Pleasant. Enjoy your days!!!");
+                    record.Suggestion.Should().Be(HourlyTemperatureSuggestions.FEELS_PLEASANT);
             }
         }
 
