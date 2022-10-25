@@ -2,6 +2,7 @@
 using System.Text.Json;
 using WeatherAPI.DTOs;
 using System.Linq;
+using WeatherAPI.Models;
 
 namespace WeatherAPI.Services
 {
@@ -40,7 +41,7 @@ namespace WeatherAPI.Services
             return null;
         }
 
-        public async Task<PollenSuggestionDTO> GetPollenSuggestion(string cityName)
+        public async Task<PollenSuggestion> GetPollenSuggestion(string cityName)
         {
             var result = await GetPollenData(cityName);
             string message = "No pollen in the air.";
@@ -59,7 +60,7 @@ namespace WeatherAPI.Services
             if (pollenNames.Count > 0)
                 message = $"Be careful in case of allergies, the presence of pollen in the air is possible ({String.Join(",", pollenNames)}).";
 
-            return new PollenSuggestionDTO(message);
+            return new PollenSuggestion(message);
         }
     }
 }
