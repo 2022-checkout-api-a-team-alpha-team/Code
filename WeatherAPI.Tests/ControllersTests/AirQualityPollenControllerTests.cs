@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace WeatherAPI.Tests.ControllersTests
 {
-    internal class AirQualityPollenControllerTests
+    public class AirQualityPollenControllerTests
     {
 
         private AirQualityPollenController _aqPollenController;
