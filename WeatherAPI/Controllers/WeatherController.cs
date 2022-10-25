@@ -16,21 +16,22 @@ namespace WeatherAPI.Controllers
             _service = service;
         }
 
-        [HttpGet("hourlyTemperature/{cityName}")]
+        [HttpGet("WeeklyForecast/{cityName}")]
         public async Task<IActionResult> GetHourlyTemperatureByCity(string cityName)
         {
-            if(string.IsNullOrEmpty(cityName))
-            {
+            if (string.IsNullOrEmpty(cityName))
                 return BadRequest(ErrorHelper.PARAMETER_CANNOT_BE_NULL_OR_EMPTY);
-            }
-            try
+            else
             {
-                var response = await _service.GetHourlyTemperatureByCity(cityName);
-                return Ok(response);
-            }
-            catch (Exception)
-            {
-                return BadRequest(ErrorHelper.SERVER_ERROR);
+                try
+                {
+                    var response = await _service.GetHourlyTemperatureByCity(cityName);
+                    return Ok(response);
+                }
+                catch (Exception)
+                {
+                    return BadRequest(ErrorHelper.SERVER_ERROR);
+                }
             }
         }
 
