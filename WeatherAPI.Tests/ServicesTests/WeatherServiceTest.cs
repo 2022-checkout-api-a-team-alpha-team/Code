@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
 using WeatherAPI.DTOs;
+using WeatherAPI.Models;
 using WeatherAPI.Services;
 
 namespace WeatherAPI.Tests.ServicesTests
@@ -28,10 +29,36 @@ namespace WeatherAPI.Tests.ServicesTests
         }
 
         [Test]
-        public void Get_Hourly_Temperature_By_CityName_Return_Type_Is_GetHourlyTemperatureResponseDTO()
+        public void Get_Hourly_Temperature_By_CityName_Should_Return_NO_OF_RECORDS_AS_7()
         {
             var result = _weatherService.GetHourlyTemperatureByCity("London").Result;
-            result.Should().BeOfType(typeof(GetHourlyTemperatureResponseDTO));
+            result.Count.Should().Be(7);
+        }
+
+        [Test]
+        public void Get_Hourly_Temperature_By_CityName_Should_Return_Type_List_Of_HourlyTempForeCastAndSuggestions()
+        {
+            var result = _weatherService.GetHourlyTemperatureByCity("London").Result;
+            result.Should().BeOfType(typeof(List<HourlyTempForeCastAndSuggestions>));
+        }
+
+        [Test]
+        public void Get_Hourly_Temperature_By_CityName_Should_Give_Suggestions_Based_On_Hourly_Temperature()
+        {
+            var result = _weatherService.GetHourlyTemperatureByCity("London").Result;
+            foreach (var record in result)
+            {
+                if (record.AverargeTemperature > 30)
+                {
+                    record.Suggestion.Should().Be("Its too Hot. Please plan your days/trip with proper Accessories and Appropriate Activities.");
+                }
+                else if (record.AverargeTemperature < 16)
+                {
+                    record.Suggestion.Should().Be("Its too Cold. Please plan your days/trip with proper Accessories and Appropriate Activities.");
+                }
+                else
+                    record.Suggestion.Should().Be("The days are Pleasant. Enjoy your days!!!");
+            }
         }
 
         [Test]
@@ -53,7 +80,7 @@ namespace WeatherAPI.Tests.ServicesTests
                 }
                 else if (record.Temperature > record.FeelsLikeTemperature)
                 {
-                    record.Suggestion.Should().Be("You'll feel colder than outside - Better to wear a jumper/ a jacket.");
+                    record.Suggestion.Should().Be("You'll feel colder than outside - Better to wear a jumper/ a jacket to avoid any chills.");
                 }
                 else
                     record.Suggestion.Should().Be("You'll feel just the right temperature as in air when you go out. Wear as you like.");
