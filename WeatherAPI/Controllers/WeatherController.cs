@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using WeatherAPI.Helper;
 using WeatherAPI.Services;
 
 namespace WeatherAPI.Controllers
@@ -25,8 +26,16 @@ namespace WeatherAPI.Controllers
         [HttpGet("feelsLikeTemperature/{cityName}")]
         public async Task<IActionResult> GetHourlyFeelsLikeTemperatureByCity(string cityName)
         {
-            var response = await _service.GetHourlyFeelsLikeTemperatureByCity(cityName);
-            return Ok(response);
+            try
+            {
+                var response = await _service.GetHourlyFeelsLikeTemperatureByCity(cityName);
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error:" + e.Message);
+                return BadRequest(ErrorHelper.SERVER_ERROR);
+            }
         }
     }
 }
