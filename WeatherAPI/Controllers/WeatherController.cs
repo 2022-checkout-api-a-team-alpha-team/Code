@@ -33,7 +33,6 @@ namespace WeatherAPI.Controllers
             }
             catch (Exception e)
             {
-                Console.WriteLine("Error:" + e.Message);
                 return BadRequest(ErrorHelper.SERVER_ERROR);
             }
         }
