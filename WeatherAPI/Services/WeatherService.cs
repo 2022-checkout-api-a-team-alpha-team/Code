@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 using WeatherAPI.DTOs;
 using WeatherAPI.Helper;
@@ -11,7 +12,7 @@ namespace WeatherAPI.Services
     {
         private HttpClient _httpClient;
         private GeoService _geoService;
-        private const int FEELS_LIKE_TEMP_NO_OF_HOURS = 24;
+        private const int NO_OF_HOURS_IN_DAY = 24;
         FeelsLikeTemperatureForecast feelsLikeTemp;
         List<FeelsLikeTemperatureForecast> feelsLikeTempResult = new();
         List<HourlyTempForeCastAndSuggestions> hourlyTemperatureSuggestions = new();
@@ -30,18 +31,21 @@ namespace WeatherAPI.Services
             DictionaryKeyPolicy = JsonNamingPolicy.CamelCase
         };
 
-        //Dressing suggestions for Feels Like Temperature       
-        private class feelLikeTemperatureSuggestions
-        {
-            public static string FEELS_LIKE_TEMP_COLD = "You'll feel colder than outside - Better to wear a jumper/ a jacket to avoid any chills.";
-            public static string FEELS_LIKE_TEMP_HOT = "You'll feel hotter than outside - Better to wear light cotton clothes.";
-            public static string FEELS_LIKE_TEMP_JUST_RIGHT = "You'll feel just the right temperature as in air when you go out. Wear as you like.";
-        }
-
         public async Task<GetHourlyTemperatureResponseDTO> GetHourlyTemperatureByLatitudeAndLongitude(double latitude, double longitude)
         {
             var result = await _httpClient.GetFromJsonAsync<GetHourlyTemperatureResponseDTO>(ConstantsHelper.WEATHER_API_URL.Replace("[latitude]",latitude.ToString().Trim()).Replace("[longitude]", longitude.ToString().Trim()), options);
             return result!;
+        }
+
+        public async Task<string> GetSuggestionsBasedOnCurrentWeather(string cityName)
+        {
+            var geoCoordinates = await _geoService.GetGeoCoordinatesByCityName(cityName);
+            double latitude = geoCoordinates.Results.ToList()[0].Latitude;
+            double longitude = geoCoordinates.Results.ToList()[0].Longitude;
+            var result = await _httpClient.GetFromJsonAsync<GetSuggestionsBasedOnWeatherDTO>(ConstantsHelper.WEATHER_API_GET_SUGGESTIONS_BASED_ON_CURRENT_WEATHER_URL.Replace("[latitude]", latitude.ToString().Trim()).Replace("[longitude]", longitude.ToString().Trim()), options);
+
+            throw new NotImplementedException();
+            return "";
         }
 
         public async Task<List<HourlyTempForeCastAndSuggestions>> GetHourlyTemperatureByCity(string cityName)
@@ -80,9 +84,9 @@ namespace WeatherAPI.Services
 
         public List<FeelsLikeTemperatureForecast> GetDressingSuggestions(GetHourlyFeelsLikeTemperatureResponseDTO result)
         {
-            List<string>? Date = result.Hourly.Time.GetRange(0, FEELS_LIKE_TEMP_NO_OF_HOURS);
-            List<double>? Temperature = result.Hourly.Temperature_2m.GetRange(0, FEELS_LIKE_TEMP_NO_OF_HOURS);
-            List<double>? FeelsLikeTemperature = result.Hourly.Apparent_Temperature.GetRange(0, FEELS_LIKE_TEMP_NO_OF_HOURS);
+            List<string>? Date = result.Hourly.Time.GetRange(0, NO_OF_HOURS_IN_DAY);
+            List<double>? Temperature = result.Hourly.Temperature_2m.GetRange(0, NO_OF_HOURS_IN_DAY);
+            List<double>? FeelsLikeTemperature = result.Hourly.Apparent_Temperature.GetRange(0, NO_OF_HOURS_IN_DAY);
 
             //Logic to assign suggestions in response
             for (int i = 0; i < Date.Count; i++)
@@ -93,15 +97,15 @@ namespace WeatherAPI.Services
                 feelsLikeTemp.FeelsLikeTemperature = FeelsLikeTemperature[i];
                 if (FeelsLikeTemperature[i] < Temperature[i])
                 {
-                    feelsLikeTemp.Suggestion = feelLikeTemperatureSuggestions.FEELS_LIKE_TEMP_COLD;
+                    feelsLikeTemp.Suggestion = FeelLikeTemperatureSuggestions.FEELS_LIKE_TEMP_COLD;
                 }
                 else if (FeelsLikeTemperature[i] > Temperature[i])
                 {
-                    feelsLikeTemp.Suggestion = feelLikeTemperatureSuggestions.FEELS_LIKE_TEMP_HOT;
+                    feelsLikeTemp.Suggestion = FeelLikeTemperatureSuggestions.FEELS_LIKE_TEMP_HOT;
                 }
                 else
                 {
-                    feelsLikeTemp.Suggestion = feelLikeTemperatureSuggestions.FEELS_LIKE_TEMP_JUST_RIGHT;
+                    feelsLikeTemp.Suggestion = FeelLikeTemperatureSuggestions.FEELS_LIKE_TEMP_JUST_RIGHT;
                 }
                 feelsLikeTempResult.Add(feelsLikeTemp);
             }
