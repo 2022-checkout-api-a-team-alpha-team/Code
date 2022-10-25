@@ -8,5 +8,6 @@ namespace WeatherAPI.Services
         Task<GetHourlyTemperatureResponseDTO> GetHourlyTemperatureByLatitudeAndLongitude(double latitude, double longitude);
         Task<List<HourlyTempForeCastAndSuggestions>> GetHourlyTemperatureByCity(string cityName);
         Task<List<FeelsLikeTemperatureForecast>> GetHourlyFeelsLikeTemperatureByCity(string city);
+        Task<string> GetSuggestionsBasedOnCurrentWeather(string cityName);
     }
 }

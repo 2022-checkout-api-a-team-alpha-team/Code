@@ -86,5 +86,12 @@ namespace WeatherAPI.Tests.ServicesTests
                     record.Suggestion.Should().Be("You'll feel just the right temperature as in air when you go out. Wear as you like.");
             }
         }
+
+        [Test]
+        public void Get_Suggestions_Based_On_Current_Weather_Should_Return_Correct_Response()
+        {
+            var result = _weatherService.GetSuggestionsBasedOnCurrentWeather("London").Result;
+            result.Should().BeOfType<GetSuggestionsBasedOnWeatherDTO>();
+        }
     }
 }
