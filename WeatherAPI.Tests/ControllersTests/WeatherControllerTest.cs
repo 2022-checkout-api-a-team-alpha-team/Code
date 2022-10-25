@@ -65,16 +65,8 @@ namespace WeatherAPI.Tests.ControllersTests
             badResult.Should().NotBeNull();
             badResult?.StatusCode.Should().Be(400);
             badResult?.Value!.ToString()!.Equals(ErrorHelper.PARAMETER_CANNOT_BE_NULL_OR_EMPTY).Should().BeTrue();
-        }
-      
-        //Dressing suggestions for Feels Like Temperature
-        private class feelLikeTemperatureSuggestions 
-        {
-            public static string FEELS_LIKE_TEMP_COLD = "You'll feel colder than outside - Better to wear a jumper/ a jacket to avoid any chills.";
-            public static string FEELS_LIKE_TEMP_HOT = "You'll feel hotter than outside - Better to wear light cotton clothes.";
-            public static string FEELS_LIKE_TEMP_JUST_RIGHT = "You'll feel just the right temperature as in air when you go out. Wear as you like.";
-        }
-
+        }      
+       
         private List<FeelsLikeTempForecastSuggestionsDTO> GetFeelsLikeTemperatureObj()
         {
             List<string>? dateList = new();
@@ -104,15 +96,15 @@ namespace WeatherAPI.Tests.ControllersTests
                 feelsLikeTemp.FeelsLikeTemperature = feelsLikeTempList[i];
                 if (feelsLikeTempList[i] < temperatureList[i])
                 {
-                    feelsLikeTemp.Suggestion = feelLikeTemperatureSuggestions.FEELS_LIKE_TEMP_COLD;
+                    feelsLikeTemp.Suggestion = FeelsLikeTemperatureSuggestions.FEELS_LIKE_TEMP_COLD;
                 }
                 else if (feelsLikeTempList[i] > temperatureList[i])
                 {
-                    feelsLikeTemp.Suggestion = feelLikeTemperatureSuggestions.FEELS_LIKE_TEMP_HOT;
+                    feelsLikeTemp.Suggestion = FeelsLikeTemperatureSuggestions.FEELS_LIKE_TEMP_HOT;
                 }
                 else
                 {
-                    feelsLikeTemp.Suggestion = feelLikeTemperatureSuggestions.FEELS_LIKE_TEMP_JUST_RIGHT;
+                    feelsLikeTemp.Suggestion = FeelsLikeTemperatureSuggestions.FEELS_LIKE_TEMP_JUST_RIGHT;
                 }
                 feelsLikeTempResult.Add(feelsLikeTemp);
             }

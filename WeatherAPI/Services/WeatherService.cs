@@ -93,11 +93,11 @@ namespace WeatherAPI.Services
                 feelsLikeTemp.Temperature = Temperature[i];
                 feelsLikeTemp.FeelsLikeTemperature = FeelsLikeTemperature[i];
                 if (FeelsLikeTemperature[i] < Temperature[i])
-                    feelsLikeTemp.Suggestion = FeelLikeTemperatureSuggestions.FEELS_LIKE_TEMP_COLD;                
+                    feelsLikeTemp.Suggestion = FeelsLikeTemperatureSuggestions.FEELS_LIKE_TEMP_COLD;                
                 else if (FeelsLikeTemperature[i] > Temperature[i])
-                    feelsLikeTemp.Suggestion = FeelLikeTemperatureSuggestions.FEELS_LIKE_TEMP_HOT;
+                    feelsLikeTemp.Suggestion = FeelsLikeTemperatureSuggestions.FEELS_LIKE_TEMP_HOT;
                 else
-                    feelsLikeTemp.Suggestion = FeelLikeTemperatureSuggestions.FEELS_LIKE_TEMP_JUST_RIGHT;
+                    feelsLikeTemp.Suggestion = FeelsLikeTemperatureSuggestions.FEELS_LIKE_TEMP_JUST_RIGHT;
                 feelsLikeTempResult.Add(feelsLikeTemp);
             }
             return feelsLikeTempResult;

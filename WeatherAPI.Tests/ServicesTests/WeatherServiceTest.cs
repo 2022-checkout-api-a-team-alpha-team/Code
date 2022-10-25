@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
 using WeatherAPI.DTOs;
+using WeatherAPI.Helper;
 using WeatherAPI.Services;
 
 namespace WeatherAPI.Tests.ServicesTests
@@ -75,14 +76,14 @@ namespace WeatherAPI.Tests.ServicesTests
             {
                 if (record.Temperature < record.FeelsLikeTemperature)
                 {
-                    record.Suggestion.Should().Be("You'll feel hotter than outside - Better to wear light cotton clothes.");
+                    record.Suggestion.Should().Be(FeelsLikeTemperatureSuggestions.FEELS_LIKE_TEMP_HOT);
                 }
                 else if (record.Temperature > record.FeelsLikeTemperature)
                 {
-                    record.Suggestion.Should().Be("You'll feel colder than outside - Better to wear a jumper/ a jacket to avoid any chills.");
+                    record.Suggestion.Should().Be(FeelsLikeTemperatureSuggestions.FEELS_LIKE_TEMP_COLD);
                 }
                 else
-                    record.Suggestion.Should().Be("You'll feel just the right temperature as in air when you go out. Wear as you like.");
+                    record.Suggestion.Should().Be(FeelsLikeTemperatureSuggestions.FEELS_LIKE_TEMP_JUST_RIGHT);
             }
         }
 
