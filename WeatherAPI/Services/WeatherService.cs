@@ -14,6 +14,8 @@ namespace WeatherAPI.Services
         private const int FEELS_LIKE_TEMP_NO_OF_HOURS = 24;
         FeelsLikeTemperatureForecast feelsLikeTemp;
         List<FeelsLikeTemperatureForecast> feelsLikeTempResult = new();
+        List<HourlyTempForeCastAndSuggestions> hourlyTemperatureSuggestions = new();
+
 
         public WeatherService()
         {
@@ -42,14 +44,19 @@ namespace WeatherAPI.Services
             return result!;
         }
 
-        public async Task<GetHourlyTemperatureResponseDTO> GetHourlyTemperatureByCity(string cityName)
+        public async Task<List<HourlyTempForeCastAndSuggestions>> GetHourlyTemperatureByCity(string cityName)
         {
             var GeoCoordinates = await _geoService.GetGeoCoordinatesByCityName(cityName);
             double latitude = GeoCoordinates!.Results.ToList()[0].Latitude;
             double longitude = GeoCoordinates.Results.ToList()[0].Longitude;
 
             var result = await _httpClient.GetFromJsonAsync<GetHourlyTemperatureResponseDTO>(ConstantsHelper.WEATHER_API_URL.Replace("[latitude]", latitude.ToString().Trim()).Replace("[longitude]", longitude.ToString().Trim()), options);
-            return result!;
+            if (result != null)
+            {
+                if(result.Hourly != null)
+                    hourlyTemperatureSuggestions = GetSuggestionsForHourlyTemperature(result);
+            }
+            return hourlyTemperatureSuggestions;
         }
 
         public async Task<List<FeelsLikeTemperatureForecast>> GetHourlyFeelsLikeTemperatureByCity(string cityName)
@@ -99,6 +106,40 @@ namespace WeatherAPI.Services
                 feelsLikeTempResult.Add(feelsLikeTemp);
             }
             return feelsLikeTempResult;
+        }
+
+        public List<HourlyTempForeCastAndSuggestions> GetSuggestionsForHourlyTemperature(GetHourlyTemperatureResponseDTO HourlyTempRspDToResult)
+        {
+            double averageTemperature = 0;
+            string stringSuggestion = "";
+            int TotalHours = HourlyTempRspDToResult!.Hourly!.Time!.Count;
+            int NoOfDays = TotalHours / 24;
+            int startingHour = 0;
+            for (int i = 1; i <= NoOfDays; i++)
+            {
+                HourlyTempForeCastAndSuggestions hourlyTemperatureSuggestion = new HourlyTempForeCastAndSuggestions();
+                List<double> Temperature = HourlyTempRspDToResult!.Hourly!.Temperature_2m!.GetRange(startingHour, 24);
+                foreach (var tempe in Temperature)
+                    averageTemperature += tempe;
+                averageTemperature = averageTemperature / 24;
+
+                if (averageTemperature > 30)
+                    stringSuggestion = "Its too Hot. Please plan your days/trip with proper Accessories and Appropriate Activities.";
+                else if(averageTemperature < 16)
+                    stringSuggestion = "Its too Cold. Please plan your days/trip with proper Accessories and Appropriate Activities.";
+                else
+                    stringSuggestion = "The days are Pleasant. Enjoy your days!!!";
+
+                hourlyTemperatureSuggestion.Day = i;
+                hourlyTemperatureSuggestion.Date = HourlyTempRspDToResult.Hourly.Time[startingHour].Substring(0,10);
+                hourlyTemperatureSuggestion.AverargeTemperature = averageTemperature;
+                hourlyTemperatureSuggestion.Suggestion = stringSuggestion;
+                hourlyTemperatureSuggestions.Add(hourlyTemperatureSuggestion);
+
+                startingHour = startingHour + 24;
+            }
+
+            return hourlyTemperatureSuggestions;
         }
     }
 }
