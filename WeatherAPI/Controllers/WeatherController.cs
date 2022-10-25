@@ -19,8 +19,19 @@ namespace WeatherAPI.Controllers
         [HttpGet("hourlyTemperature/{cityName}")]
         public async Task<IActionResult> GetHourlyTemperatureByCity(string cityName)
         {
-            var response = await _service.GetHourlyTemperatureByCity(cityName);
-            return Ok(response);
+            if(string.IsNullOrEmpty(cityName))
+            {
+                return BadRequest(ErrorHelper.PARAMETER_CANNOT_BE_NULL_OR_EMPTY);
+            }
+            try
+            {
+                var response = await _service.GetHourlyTemperatureByCity(cityName);
+                return Ok(response);
+            }
+            catch (Exception)
+            {
+                return BadRequest(ErrorHelper.SERVER_ERROR);
+            }
         }
 
         [HttpGet("feelsLikeTemperature/{cityName}")]

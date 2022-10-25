@@ -45,14 +45,21 @@ namespace WeatherAPI.Tests.ControllersTests
         [Test]
         public void Get_Coord_By_City_Name_Should_Return_BadRequest_When_Given_Wrong_Input()
         {
-            //Arange
-            _mockGeoService.Setup(g => g.GetGeoCoordinatesByCityName("London")).ReturnsAsync(GetGeoCoordObj());
 
             //Act
             var response = _geoController.GetGeoCoordinatesByCityName(null).Result;
 
             //Assert
             var badResult = response as BadRequestObjectResult;
+            badResult.Should().NotBeNull();
+            badResult?.StatusCode.Should().Be(400);
+            badResult?.Value.ToString().Equals(ErrorHelper.PARAMETER_CANNOT_BE_NULL_OR_EMPTY).Should().BeTrue();
+
+            //Act
+            response = _geoController.GetGeoCoordinatesByCityName("").Result;
+
+            //Assert
+            badResult = response as BadRequestObjectResult;
             badResult.Should().NotBeNull();
             badResult?.StatusCode.Should().Be(400);
             badResult?.Value.ToString().Equals(ErrorHelper.PARAMETER_CANNOT_BE_NULL_OR_EMPTY).Should().BeTrue();
