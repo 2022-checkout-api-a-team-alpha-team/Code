@@ -28,14 +28,14 @@ namespace WeatherAPI.Services
             DictionaryKeyPolicy = JsonNamingPolicy.CamelCase
         };
 
-        //Dressing suggestions for Feels Like Temperature
-        private static readonly string[] feelLikeTemperatureSuggestions = new[]
+        //Dressing suggestions for Feels Like Temperature       
+        private class feelLikeTemperatureSuggestions
         {
-            "You'll feel colder than outside - Better to wear a jumper/ a jacket.",
-            "You'll feel hotter than outside - Better to wear light cotton clothes.",
-            "You'll feel just the right temperature as in air when you go out. Wear as you like."
-        };
-               
+            public static string FEELS_LIKE_TEMP_COLD = "You'll feel colder than outside - Better to wear a jumper/ a jacket to avoid any chills.";
+            public static string FEELS_LIKE_TEMP_HOT = "You'll feel hotter than outside - Better to wear light cotton clothes.";
+            public static string FEELS_LIKE_TEMP_JUST_RIGHT = "You'll feel just the right temperature as in air when you go out. Wear as you like.";
+        }
+
         public async Task<GetHourlyTemperatureResponseDTO> GetHourlyTemperatureByLatitudeAndLongitude(double latitude, double longitude)
         {
             var result = await _httpClient.GetFromJsonAsync<GetHourlyTemperatureResponseDTO>(ConstantsHelper.WEATHER_API_URL.Replace("[latitude]",latitude.ToString().Trim()).Replace("[longitude]", longitude.ToString().Trim()), options);
@@ -86,15 +86,15 @@ namespace WeatherAPI.Services
                 feelsLikeTemp.FeelsLikeTemperature = FeelsLikeTemperature[i];
                 if (FeelsLikeTemperature[i] < Temperature[i])
                 {
-                    feelsLikeTemp.Suggestion = feelLikeTemperatureSuggestions[0];
+                    feelsLikeTemp.Suggestion = feelLikeTemperatureSuggestions.FEELS_LIKE_TEMP_COLD;
                 }
                 else if (FeelsLikeTemperature[i] > Temperature[i])
                 {
-                    feelsLikeTemp.Suggestion = feelLikeTemperatureSuggestions[1];
+                    feelsLikeTemp.Suggestion = feelLikeTemperatureSuggestions.FEELS_LIKE_TEMP_HOT;
                 }
                 else
                 {
-                    feelsLikeTemp.Suggestion = feelLikeTemperatureSuggestions[2];
+                    feelsLikeTemp.Suggestion = feelLikeTemperatureSuggestions.FEELS_LIKE_TEMP_JUST_RIGHT;
                 }
                 feelsLikeTempResult.Add(feelsLikeTemp);
             }
