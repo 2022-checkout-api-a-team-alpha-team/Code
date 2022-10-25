@@ -92,31 +92,5 @@ namespace WeatherAPI.Tests.ServicesTests
                 .Including(flds => flds.Hourly_Units.PM2_5)
                 );
         }
-
-        [Test]
-        public  async Task Get_Air_Quality_Particulate_Matter_By_City_Name_Should_Return_Result_Via_API()
-        {
-            // Arrange
-            //var expected = JsonSerializer.Deserialize<GetAirQualityParticulateMatterResponseDTO>(expectedResultJson, options);
-            GetAirQualityParticulateMatterResponseDTO expected = new();
-
-            Mock<IAirQualityParticulateMatterService> _mockService = new ();
-            _mockService
-                .Setup(repo => repo.GetAirQualityParticulateMatterByCityName("Kuala Lumpur"))
-                .ReturnsAsync(expected);
-
-            AirQualityParticulateMatterController _service = new(_mockService.Object);
-
-            // Act
-            var result = await _service.GetAirQualityParticulateMatterByCityName("Kuala Lumpur") as ObjectResult;
-            var actualResult = result.Value;
-
-            // Assert
-            Assert.That(result, Is.TypeOf<OkObjectResult>());
-            Assert.That(actualResult, Is.EqualTo(expected));
-            Assert.AreEqual(HttpStatusCode.OK, (HttpStatusCode)result.StatusCode);
-            _mockService.Verify(c => c.GetAirQualityParticulateMatterByCityName(It.IsAny<string>()), Times.Once());
-            Assert.AreEqual(expected, actualResult);
-        }
     }
 }
