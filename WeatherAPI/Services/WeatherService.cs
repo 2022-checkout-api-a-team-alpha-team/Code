@@ -14,7 +14,7 @@ namespace WeatherAPI.Services
         private GeoService _geoService;
         private const int NO_OF_HOURS_IN_DAY = 24;
         FeelsLikeTempForecastSuggestionsDTO? feelsLikeTemp;
-        List<FeelsLikeTempForecastSuggestionsDTO?> feelsLikeTempResult;
+        List<FeelsLikeTempForecastSuggestionsDTO> feelsLikeTempResult;
         List<HourlyTempForeCastAndSuggestionsDTO> hourlyTemperatureSuggestions;
 
 
