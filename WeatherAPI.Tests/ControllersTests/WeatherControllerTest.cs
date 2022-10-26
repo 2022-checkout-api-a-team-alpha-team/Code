@@ -162,7 +162,7 @@ namespace WeatherAPI.Tests.ControllersTests
             {
                 hourlyTempForeCastAndSuggestions.Day = i;
                 hourlyTempForeCastAndSuggestions.Date = DateTime.Now.ToString();
-                hourlyTempForeCastAndSuggestions.AverargeTemperature = "15.1";
+                hourlyTempForeCastAndSuggestions.AverageTemperature = "15.1";
                 hourlyTempForeCastAndSuggestions.Suggestion = HourlyTemperatureSuggestions.FEELS_PLEASANT;
             }
 
