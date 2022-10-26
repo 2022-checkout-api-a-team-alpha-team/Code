@@ -13,7 +13,7 @@ namespace WeatherAPI.Services
         private GeoService _geoService;
         private const int NO_OF_HOURS_IN_DAY = 24;
         FeelsLikeTempForecastSuggestionsDTO? feelsLikeTemp;
-        List<FeelsLikeTempForecastSuggestionsDTO?> feelsLikeTempResult = new();
+        List<FeelsLikeTempForecastSuggestionsDTO> feelsLikeTempResult = new();
         List<HourlyTempForeCastAndSuggestionsDTO> hourlyTemperatureSuggestions = new();
 
 
@@ -89,7 +89,8 @@ namespace WeatherAPI.Services
             for (int i = 0; i < Date.Count; i++)
             {
                 feelsLikeTemp = new();
-                feelsLikeTemp.Date = Date[i];
+                feelsLikeTemp.Date = Date[i].Substring(0, 10);
+                feelsLikeTemp.Time_24_Hour_Clock = Date[i].Substring(11);
                 feelsLikeTemp.Temperature = Temperature[i];
                 feelsLikeTemp.FeelsLikeTemperature = FeelsLikeTemperature[i];
                 if (FeelsLikeTemperature[i] < Temperature[i])
