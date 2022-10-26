@@ -7,14 +7,13 @@ using FluentAssertions;
 using NUnit.Framework;
 using WeatherAPI.DTOs;
 using WeatherAPI.Helper;
-using WeatherAPI.Models;
 using WeatherAPI.Services;
 
 namespace WeatherAPI.Tests.ServicesTests
 {
     public class WeatherServiceTest
     {
-        private WeatherService _weatherService;
+        private WeatherService? _weatherService;
 
         [SetUp]
         public void Setup()
@@ -25,14 +24,14 @@ namespace WeatherAPI.Tests.ServicesTests
         [Test]
         public void Get_Hourly_Temperature_By_Latitude_And_Longitude_Return_Type_Is_GetHourlyTemperatureResponseDTO()
         {
-            var result = _weatherService.GetHourlyTemperatureByLatitudeAndLongitude(51.5, -0.1262).Result;
+            var result = _weatherService!.GetHourlyTemperatureByLatitudeAndLongitude(51.5, -0.1262).Result;
             result.Should().BeOfType(typeof(GetHourlyTemperatureResponseDTO));
         }
 
         [Test]
         public void Get_Hourly_Temperature_By_CityName_Should_Return_NO_OF_RECORDS_AS_7()
         {
-            var result = _weatherService.GetHourlyTemperatureByCity("London").Result;
+            var result = _weatherService!.GetHourlyTemperatureByCity("London").Result;
             result.Count.Should().Be(7);
         }
 
@@ -46,7 +45,7 @@ namespace WeatherAPI.Tests.ServicesTests
         [Test]
         public void Get_Hourly_Temperature_By_CityName_Should_Give_Suggestions_Based_On_Hourly_Temperature()
         {
-            var result = _weatherService.GetHourlyTemperatureByCity("London").Result;
+            var result = _weatherService!.GetHourlyTemperatureByCity("London").Result;
             foreach (var record in result)
             {
                 if (record.AverargeTemperature > 23)
@@ -65,33 +64,33 @@ namespace WeatherAPI.Tests.ServicesTests
         [Test]
         public void Get_Hourly_Feels_Like_Temperature_By_CityName_Response_Should_Return_Expected_No_Of_Records()
         {
-            var result = _weatherService.GetHourlyFeelsLikeTemperatureByCity("London").Result;
+            var result = _weatherService!.GetHourlyFeelsLikeTemperatureByCity("London").Result;
             result.Count.Should().Be(24);
         }
 
         [Test]
         public void Get_Hourly_Feels_Like_Temperature_By_CityName_Should_Give_Dressing_Suggestion_Based_On_Feels_Like_Temperature()
         {
-            var result = _weatherService.GetHourlyFeelsLikeTemperatureByCity("London").Result;
+            var result = _weatherService!.GetHourlyFeelsLikeTemperatureByCity("London").Result;
             foreach(var record in result)
             {
                 if (record.Temperature < record.FeelsLikeTemperature)
                 {
-                    record.Suggestion.Should().Be("You'll feel hotter than outside - Better to wear light cotton clothes.");
+                    record.Suggestion.Should().Be(FeelsLikeTemperatureSuggestions.FEELS_LIKE_TEMP_HOT);
                 }
                 else if (record.Temperature > record.FeelsLikeTemperature)
                 {
-                    record.Suggestion.Should().Be("You'll feel colder than outside - Better to wear a jumper/ a jacket to avoid any chills.");
+                    record.Suggestion.Should().Be(FeelsLikeTemperatureSuggestions.FEELS_LIKE_TEMP_COLD);
                 }
                 else
-                    record.Suggestion.Should().Be("You'll feel just the right temperature as in air when you go out. Wear as you like.");
+                    record.Suggestion.Should().Be(FeelsLikeTemperatureSuggestions.FEELS_LIKE_TEMP_JUST_RIGHT);
             }
         }
 
         [Test]
         public void Get_Suggestions_Based_On_Current_Weather_Should_Return_Correct_Response()
         {
-            var result = _weatherService.GetSuggestionsBasedOnCurrentWeather("London").Result;
+            var result = _weatherService!.GetSuggestionsBasedOnCurrentWeather("London").Result;
             result.Should().BeOfType<GetSuggestionsBasedOnWeatherDTO>();
         }
     }

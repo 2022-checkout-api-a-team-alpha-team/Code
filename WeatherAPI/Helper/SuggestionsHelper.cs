@@ -7,7 +7,7 @@
         public const string WEAR_AS_YOU_LIKE = "Wear as you like.";
     }
 
-    public static class FeelLikeTemperatureSuggestions
+    public static class FeelsLikeTemperatureSuggestions
     {
         public const string FEELS_LIKE_TEMP_COLD = "You'll feel colder than outside - " + WeatherSuggestionsHelper.WEAR_JACKET;
         public const string FEELS_LIKE_TEMP_HOT = "You'll feel hotter than outside - " + WeatherSuggestionsHelper.WEAR_LIGHT_CLOTHES;

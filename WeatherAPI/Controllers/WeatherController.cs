@@ -38,12 +38,14 @@ namespace WeatherAPI.Controllers
         [HttpGet("feelsLikeTemperature/{cityName}")]
         public async Task<IActionResult> GetHourlyFeelsLikeTemperatureByCity(string cityName)
         {
+            if (String.IsNullOrEmpty(cityName))
+                return BadRequest(ErrorHelper.PARAMETER_CANNOT_BE_NULL_OR_EMPTY);
             try
             {
                 var response = await _service.GetHourlyFeelsLikeTemperatureByCity(cityName);
                 return Ok(response);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return BadRequest(ErrorHelper.SERVER_ERROR);
             }
