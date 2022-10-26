@@ -13,14 +13,17 @@ namespace WeatherAPI.Services
         private GeoService _geoService;
         private const int NO_OF_HOURS_IN_DAY = 24;
         FeelsLikeTempForecastSuggestionsDTO? feelsLikeTemp;
-        List<FeelsLikeTempForecastSuggestionsDTO?> feelsLikeTempResult = new();
-        List<HourlyTempForeCastAndSuggestionsDTO> hourlyTemperatureSuggestions = new();
+        List<FeelsLikeTempForecastSuggestionsDTO?> feelsLikeTempResult;
+        List<HourlyTempForeCastAndSuggestionsDTO> hourlyTemperatureSuggestions;
 
 
         public WeatherService()
         {
             _httpClient = new HttpClient();
             _geoService = new GeoService();
+
+            feelsLikeTempResult = new();
+            hourlyTemperatureSuggestions = new();
         }
 
         private readonly JsonSerializerOptions options = new()
