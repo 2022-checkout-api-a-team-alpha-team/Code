@@ -69,6 +69,13 @@ namespace WeatherAPI.Tests.ServicesTests
         }
 
         [Test]
+        public void Get_Hourly_Feels_Like_Temperature_By_CityName_Should_Return_Type_List_Of_FeelsLikeTempForecastSuggestions()
+        {
+            var result = _weatherService!.GetHourlyFeelsLikeTemperatureByCity("London").Result;
+            result.Should().BeOfType(typeof(List<FeelsLikeTempForecastSuggestionsDTO>));
+        }
+
+        [Test]
         public void Get_Hourly_Feels_Like_Temperature_By_CityName_Should_Give_Dressing_Suggestion_Based_On_Feels_Like_Temperature()
         {
             var result = _weatherService!.GetHourlyFeelsLikeTemperatureByCity("London").Result;
