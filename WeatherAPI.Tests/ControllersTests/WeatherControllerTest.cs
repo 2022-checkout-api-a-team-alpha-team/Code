@@ -67,6 +67,10 @@ namespace WeatherAPI.Tests.ControllersTests
             badResult?.Value!.ToString()!.Equals(ErrorHelper.PARAMETER_CANNOT_BE_NULL_OR_EMPTY).Should().BeTrue();
         }      
        
+        /// <summary>
+        /// Method to prepare dummy data object for feels like temperature forcast suggestions for mock service
+        /// </summary>
+        /// <returns>List of suggestions and data based on feels like temperature forecast</returns>
         private List<FeelsLikeTempForecastSuggestionsDTO> GetFeelsLikeTemperatureObj()
         {
             List<string>? dateList = new();
@@ -91,21 +95,17 @@ namespace WeatherAPI.Tests.ControllersTests
             for (int i = 0; i < dateList.Count; i++)
             {
                 feelsLikeTemp = new();
-                feelsLikeTemp.Date = dateList[i];
+                feelsLikeTemp.Date = dateList[i].Substring(0,11);
+                feelsLikeTemp.Time_24_Hour_Clock = dateList[i].Substring(11,5);
                 feelsLikeTemp.Temperature = temperatureList[i];
                 feelsLikeTemp.FeelsLikeTemperature = feelsLikeTempList[i];
                 if (feelsLikeTempList[i] < temperatureList[i])
-                {
                     feelsLikeTemp.Suggestion = FeelsLikeTemperatureSuggestions.FEELS_LIKE_TEMP_COLD;
-                }
                 else if (feelsLikeTempList[i] > temperatureList[i])
-                {
                     feelsLikeTemp.Suggestion = FeelsLikeTemperatureSuggestions.FEELS_LIKE_TEMP_HOT;
-                }
                 else
-                {
                     feelsLikeTemp.Suggestion = FeelsLikeTemperatureSuggestions.FEELS_LIKE_TEMP_JUST_RIGHT;
-                }
+
                 feelsLikeTempResult.Add(feelsLikeTemp);
             }
             return feelsLikeTempResult;

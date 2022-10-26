@@ -35,7 +35,7 @@ namespace WeatherAPI.Controllers
             }
         }
 
-        [HttpGet("feelsLikeTemperature/{cityName}")]
+        [HttpGet("FeelsLikeTemperature/{cityName}")]
         public async Task<IActionResult> GetHourlyFeelsLikeTemperatureByCity(string cityName)
         {
             if (String.IsNullOrEmpty(cityName))
