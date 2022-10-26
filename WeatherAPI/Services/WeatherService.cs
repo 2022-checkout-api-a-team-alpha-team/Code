@@ -45,8 +45,6 @@ namespace WeatherAPI.Services
             double latitude = geoCoordinates.Results.ToList()[0].Latitude;
             double longitude = geoCoordinates.Results.ToList()[0].Longitude;
             var result = await _httpClient.GetFromJsonAsync<GetSuggestionsBasedOnWeatherDTO>(ConstantsHelper.WEATHER_API_GET_SUGGESTIONS_BASED_ON_CURRENT_WEATHER_URL.Replace("[latitude]", latitude.ToString().Trim()).Replace("[longitude]", longitude.ToString().Trim()), options);
-
-            throw new NotImplementedException();
             return "";
         }
 
