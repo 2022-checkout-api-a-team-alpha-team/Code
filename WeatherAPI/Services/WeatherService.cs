@@ -146,7 +146,7 @@ namespace WeatherAPI.Services
 
                 hourlyTemperatureSuggestion.Day = i;
                 hourlyTemperatureSuggestion.Date = HourlyTempRspDToResult.Hourly.Time[startingHour].Substring(0,10);
-                hourlyTemperatureSuggestion.AverargeTemperature = averageTemperature.ToString("#.#");
+                hourlyTemperatureSuggestion.AverageTemperature = averageTemperature.ToString("#.#");
                 hourlyTemperatureSuggestion.Suggestion = stringSuggestion;
                 hourlyTemperatureSuggestions.Add(hourlyTemperatureSuggestion);
 

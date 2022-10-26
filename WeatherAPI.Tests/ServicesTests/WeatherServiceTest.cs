@@ -48,11 +48,11 @@ namespace WeatherAPI.Tests.ServicesTests
             var result = _weatherService!.GetHourlyTemperatureByCity("London").Result;
             foreach (var record in result)
             {
-                if (Convert.ToDouble(record.AverargeTemperature) > 23)
+                if (Convert.ToDouble(record.AverageTemperature) > 23)
                 {
                     record.Suggestion.Should().Be(HourlyTemperatureSuggestions.FEELS_HOT);
                 }
-                else if (Convert.ToDouble(record.AverargeTemperature) < 16)
+                else if (Convert.ToDouble(record.AverageTemperature) < 16)
                 {
                     record.Suggestion.Should().Be(HourlyTemperatureSuggestions.FEELS_COLD);
                 }
