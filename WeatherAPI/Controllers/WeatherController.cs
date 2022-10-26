@@ -16,6 +16,12 @@ namespace WeatherAPI.Controllers
             _service = service;
         }
 
+        /// <summary>
+        /// This API returns Weekly Forecast and Suggestions based on City's HourlyTemperature
+        /// </summary>
+        /// <param name="cityName"></param>
+        /// <returns> 7 days Forecast with Suggestions and Forecast - HourlyTempForeCastAndSuggestionsDTO - Day,Date, AverageTemperature and Suggestions</returns>
+        /// <response code="200">Returns Request successfully.</response>
         [HttpGet("WeeklyForecast/{cityName}")]
         public async Task<IActionResult> GetHourlyTemperatureByCity(string cityName)
         {
