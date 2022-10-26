@@ -96,7 +96,7 @@ namespace WeatherAPI.Tests.ControllersTests
                 AllowTrailingCommas = true,
                 DictionaryKeyPolicy = JsonNamingPolicy.CamelCase
             };
-            return JsonSerializer.Deserialize<GetGeoCoordResponseDTO>(jsonOfObjectToReturn, options);
+            return JsonSerializer.Deserialize<GetGeoCoordResponseDTO>(jsonOfObjectToReturn, options)!;
         }
     }
 }

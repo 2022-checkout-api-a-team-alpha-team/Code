@@ -1,5 +1,6 @@
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using System.Reflection;
 using WeatherAPI.HealthCheck;
 using WeatherAPI.Helper;
 using WeatherAPI.Services;
@@ -18,7 +19,10 @@ builder.Services.AddHttpClient<IAirQualityPollenService, AirQualityPollenService
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c => {
+    c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory,
+    $"{Assembly.GetExecutingAssembly().GetName().Name}.xml"));
+});
 
 // For Health Check UI
 builder.Services.AddHealthChecksUI().AddInMemoryStorage();
