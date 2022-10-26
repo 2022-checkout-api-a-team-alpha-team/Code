@@ -10,61 +10,55 @@ namespace WeatherAPI.DTOs
         [JsonProperty("longitude")]
         public double Longitude { get; set; }
 
-        [JsonProperty("elevation")]
-        public double Elevation { get; set; }
-
         [JsonProperty("generationtime_ms")]
-        public double GenerationtimeMs { get; set; }
+        public double Generationtime_Ms { get; set; }
 
         [JsonProperty("utc_offset_seconds")]
-        public int UtcOffsetSeconds { get; set; }
+        public int Utc_Offset_Seconds { get; set; }
 
         [JsonProperty("timezone")]
         public string? Timezone { get; set; }
 
         [JsonProperty("timezone_abbreviation")]
-        public string? TimezoneAbbreviation { get; set; }
+        public string? Timezone_Abbreviation { get; set; }
 
-        [JsonProperty("hourly")]
-        public CurrentWeatherHourlyDTO Hourly { get; set; }
+        [JsonProperty("elevation")]
+        public double Elevation { get; set; }
 
-        [JsonProperty("hourly_units")]
-        public CurrentWeatherHourlyUnitsDTO HourlyUnits { get; set; }
+        [JsonProperty("daily_units")]
+        public GetWeatherSuggestionsDailyUnitsDTO? Daily_Units { get; set; }
 
-        [JsonProperty("current_weather")]
-        public CurrentWeather? CurrentWeather { get; set; }
+        [JsonProperty("daily")]
+        public GetWeatherSuggestionsDailyDTO? Daily { get; set; }
     }
 
-    public class CurrentWeather
-    {
-        [JsonProperty("time")]
-        public string? Time { get; set; }
-
-        [JsonProperty("temperature")]
-        public double Temperature { get; set; }
-
-        [JsonProperty("weathercode")]
-        public int Weathercode { get; set; }
-
-        [JsonProperty("windspeed")]
-        public double Windspeed { get; set; }
-
-        [JsonProperty("winddirection")]
-        public int Winddirection { get; set; }
-    }
-
-    public class CurrentWeatherHourlyDTO
+    public class GetWeatherSuggestionsDailyDTO
     {
         [JsonProperty("time")]
         public List<string>? Time { get; set; }
 
-        [JsonProperty("temperature_2m")]
-        public List<double>? Temperature_2m { get; set; }
+        [JsonProperty("weathercode")]
+        public List<int>? Weathercode { get; set; }
+
+        [JsonProperty("temperature_2m_max")]
+        public List<double>? Temperature_2m_Max { get; set; }
+
+        [JsonProperty("temperature_2m_min")]
+        public List<double>? Temperature_2m_Min { get; set; }
     }
 
-    public class CurrentWeatherHourlyUnitsDTO
+    public class GetWeatherSuggestionsDailyUnitsDTO
     {
-        [JsonProperty("temperature_2m")]
-        public string? Temperature2m { get; set; }
+        [JsonProperty("time")]
+        public string? Time { get; set; }
+
+        [JsonProperty("weathercode")]
+        public string? Weathercode { get; set; }
+
+        [JsonProperty("temperature_2m_max")]
+        public string? Temperature_2m_Max { get; set; }
+
+        [JsonProperty("temperature_2m_min")]
+        public string? Temperature_2m_Min { get; set; }
     }
 }
