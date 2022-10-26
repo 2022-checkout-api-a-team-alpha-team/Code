@@ -38,7 +38,7 @@ namespace WeatherAPI.Tests.ServicesTests
         [Test]
         public void Get_Hourly_Temperature_By_CityName_Should_Return_Type_List_Of_HourlyTempForeCastAndSuggestions()
         {
-            var result = _weatherService.GetHourlyTemperatureByCity("London").Result;
+            var result = _weatherService!.GetHourlyTemperatureByCity("London").Result;
             result.Should().BeOfType(typeof(List<HourlyTempForeCastAndSuggestionsDTO>));
         }
 
