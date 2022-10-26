@@ -254,7 +254,7 @@ namespace WeatherAPI.Tests.ControllersTests
         {
 
             //Act
-            var response = _weatherController!.GetSuggestionsBasedOnWeather(null).Result;
+            var response = _weatherController!.GetSuggestionsBasedOnWeather(null!).Result;
 
             //Assert
             var badResult = response as BadRequestObjectResult;
