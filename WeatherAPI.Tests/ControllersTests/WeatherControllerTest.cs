@@ -115,7 +115,7 @@ namespace WeatherAPI.Tests.ControllersTests
         public void Get_Hourly_Temperature_By_City_Name_Should_Return_BadRequest_When_Input_Is_Null()
         {
             //Act
-            var response = _weatherController.GetHourlyTemperatureByCity(null).Result;
+            var response = _weatherController!.GetHourlyTemperatureByCity(null!).Result;
 
             //Assert
             var badResult = response as BadRequestObjectResult;
@@ -128,7 +128,7 @@ namespace WeatherAPI.Tests.ControllersTests
         public void Get_Hourly_Temperature_By_City_Name_Should_Return_BadRequest_When_Input_Is_Empty()
         {
             //Act
-            var response = _weatherController.GetHourlyTemperatureByCity("").Result;
+            var response = _weatherController!.GetHourlyTemperatureByCity("").Result;
 
             //Assert
             var badResult = response as BadRequestObjectResult;
@@ -141,10 +141,10 @@ namespace WeatherAPI.Tests.ControllersTests
         public void Get_Hourly_Temperature_By_City_Name_Should_Return_Ok_When_Given_Right_Input()
         {
             //Arange
-            _mockWeatherService.Setup(g => g.GetHourlyTemperatureByCity("London")).ReturnsAsync(GetHourlyTempForeCastAndSuggestions());
+            _mockWeatherService!.Setup(g => g.GetHourlyTemperatureByCity("London")).ReturnsAsync(GetHourlyTempForeCastAndSuggestions());
 
             //Act
-            var response = _weatherController.GetHourlyTemperatureByCity("London").Result;
+            var response = _weatherController!.GetHourlyTemperatureByCity("London").Result;
 
             //Assert
             var okResult = response as OkObjectResult;
