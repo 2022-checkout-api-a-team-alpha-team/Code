@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Org.BouncyCastle.Bcpg.OpenPgp;
+using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
@@ -39,13 +40,29 @@ namespace WeatherAPI.Services
             return result!;
         }
 
-        public async Task<string> GetSuggestionsBasedOnCurrentWeather(string cityName)
+        public async Task<GetWeatherSuggestionsApiResponseDTO> GetSuggestionsBasedOnCurrentWeather(string cityName)
         {
+            var responseToReturn = new GetWeatherSuggestionsApiResponseDTO();
+            var dailySuggestionsList = new List<DailyWeatherSuggestionResponseDTO>();
+
             var geoCoordinates = await _geoService.GetGeoCoordinatesByCityName(cityName);
             double latitude = geoCoordinates.Results.ToList()[0].Latitude;
             double longitude = geoCoordinates.Results.ToList()[0].Longitude;
             var result = await _httpClient.GetFromJsonAsync<GetSuggestionsBasedOnWeatherDTO>(ConstantsHelper.WEATHER_API_GET_SUGGESTIONS_BASED_ON_CURRENT_WEATHER_URL.Replace("[latitude]", latitude.ToString().Trim()).Replace("[longitude]", longitude.ToString().Trim()), options);
-            return "";
+            if (result != null && result.Daily != null)
+            {
+                dailySuggestionsList = DailyWeatherSuggestionsCalculator.GetListOfDailyWeatherSuggestionsForWeek(result.Daily!);
+            }
+
+            responseToReturn.Latitude = result!.Latitude;
+            responseToReturn.Longitude = result!.Longitude;
+            responseToReturn.Timezone = result!.Timezone;
+            responseToReturn.TimezoneAbbreviation = result!.Timezone_Abbreviation;
+            responseToReturn.Elevation = result!.Elevation;
+            responseToReturn.UtcOffsetSeconds = result!.Utc_Offset_Seconds;
+            responseToReturn.WeatherSuggestions = dailySuggestionsList;
+
+            return responseToReturn;
         }
 
         public async Task<List<HourlyTempForeCastAndSuggestionsDTO>> GetHourlyTemperatureByCity(string cityName)

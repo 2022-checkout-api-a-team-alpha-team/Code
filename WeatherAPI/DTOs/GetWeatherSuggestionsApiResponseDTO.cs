@@ -16,14 +16,14 @@ namespace WeatherAPI.DTOs
 
         public string? TimezoneAbbreviation { get; set; }
 
-        public List<DailyWeatherSuggestionDTO>? WeatherSuggestions { get; set; }
+        public List<DailyWeatherSuggestionResponseDTO>? WeatherSuggestions { get; set; }
     }
 
-    public class DailyWeatherSuggestionDTO
+    public class DailyWeatherSuggestionResponseDTO
     {
         public string? Time { get; set; }
-        public double MaxTemperature { get; set; }
-        public double MinTemperature { get; set; }
+        public double? MaxTemperature { get; set; }
+        public double? MinTemperature { get; set; }
         public string? Suggestion { get; set; }
     }
 }

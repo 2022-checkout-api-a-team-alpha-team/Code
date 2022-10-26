@@ -98,7 +98,7 @@ namespace WeatherAPI.Tests.ServicesTests
         public void Get_Suggestions_Based_On_Current_Weather_Should_Return_Correct_Response()
         {
             var result = _weatherService!.GetSuggestionsBasedOnCurrentWeather("London").Result;
-            result.Should().BeOfType<GetSuggestionsBasedOnWeatherDTO>();
+            result.Should().BeOfType<GetWeatherSuggestionsApiResponseDTO>();
         }
     }
 }
