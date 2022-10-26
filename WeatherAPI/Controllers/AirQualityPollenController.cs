@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WeatherAPI.Services;
+using WeatherAPI.Helper;
 
 namespace WeatherAPI.Controllers
 {
@@ -18,8 +19,20 @@ namespace WeatherAPI.Controllers
         [HttpGet("{cityName}")]
         public async Task<IActionResult> GetPollenData(string cityName)
         {
-            var response = await _service.GetPollenData(cityName);
-            return Ok(response);
+            try
+            {
+                if (String.IsNullOrEmpty(cityName))
+                    return BadRequest(ErrorHelper.PARAMETER_CANNOT_BE_NULL_OR_EMPTY);
+
+
+                var response = await _service.GetPollenData(cityName);
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error:" + e.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, ErrorHelper.SERVER_ERROR);
+            }
         }
     }
 }

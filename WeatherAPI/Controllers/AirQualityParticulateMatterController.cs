@@ -25,7 +25,8 @@ namespace WeatherAPI.Controllers
             }
             catch (Exception ex)
             {
-                throw;
+                //throw;
+                return BadRequest(ex.Message);
             }
             return Ok(response);
         }

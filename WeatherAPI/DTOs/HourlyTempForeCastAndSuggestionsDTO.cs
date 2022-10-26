@@ -1,6 +1,6 @@
 ﻿namespace WeatherAPI.DTOs
 {
-    public class HourlyTempForeCastAndSuggestions
+    public class HourlyTempForeCastAndSuggestionsDTO
     {
         public int Day { get; set; }
         public string? Date { get; set; }

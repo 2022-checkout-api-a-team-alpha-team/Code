@@ -14,7 +14,7 @@ using WeatherAPI.Helper;
 using WeatherAPI.Services;
 
 namespace WeatherAPI.Tests.ControllersTests
-{    
+{
     public class WeatherControllerTest
     {
         private WeatherController? _weatherController;
@@ -109,6 +109,64 @@ namespace WeatherAPI.Tests.ControllersTests
                 feelsLikeTempResult.Add(feelsLikeTemp);
             }
             return feelsLikeTempResult;
+        }
+
+        [Test]
+        public void Get_Hourly_Temperature_By_City_Name_Should_Return_BadRequest_When_Input_Is_Null()
+        {
+            //Act
+            var response = _weatherController.GetHourlyTemperatureByCity(null).Result;
+
+            //Assert
+            var badResult = response as BadRequestObjectResult;
+            badResult.Should().NotBeNull();
+            badResult?.StatusCode.Should().Be(400);
+            badResult?.Value?.Equals(ErrorHelper.PARAMETER_CANNOT_BE_NULL_OR_EMPTY).Should().BeTrue();
+        }
+
+        [Test]
+        public void Get_Hourly_Temperature_By_City_Name_Should_Return_BadRequest_When_Input_Is_Empty()
+        {
+            //Act
+            var response = _weatherController.GetHourlyTemperatureByCity("").Result;
+
+            //Assert
+            var badResult = response as BadRequestObjectResult;
+            badResult.Should().NotBeNull();
+            badResult?.StatusCode.Should().Be(400);
+            badResult?.Value?.Equals(ErrorHelper.PARAMETER_CANNOT_BE_NULL_OR_EMPTY).Should().BeTrue();
+        }
+
+        [Test]
+        public void Get_Hourly_Temperature_By_City_Name_Should_Return_Ok_When_Given_Right_Input()
+        {
+            //Arange
+            _mockWeatherService.Setup(g => g.GetHourlyTemperatureByCity("London")).ReturnsAsync(GetHourlyTempForeCastAndSuggestions());
+
+            //Act
+            var response = _weatherController.GetHourlyTemperatureByCity("London").Result;
+
+            //Assert
+            var okResult = response as OkObjectResult;
+            okResult.Should().NotBeNull();
+            okResult?.StatusCode.Should().Be(200);
+        }
+
+        private List<HourlyTempForeCastAndSuggestionsDTO> GetHourlyTempForeCastAndSuggestions()
+        {
+            List<HourlyTempForeCastAndSuggestionsDTO> ListHourlyTempForeCastAndSuggestions = new();
+
+            HourlyTempForeCastAndSuggestionsDTO hourlyTempForeCastAndSuggestions = new();
+
+            for (var i = 1; i < 3; i++)
+            {
+                hourlyTempForeCastAndSuggestions.Day = i;
+                hourlyTempForeCastAndSuggestions.Date = DateTime.Now.ToString();
+                hourlyTempForeCastAndSuggestions.AverargeTemperature = 15.1234;
+                hourlyTempForeCastAndSuggestions.Suggestion = HourlyTemperatureSuggestions.FEELS_PLEASANT;
+            }
+
+            return ListHourlyTempForeCastAndSuggestions;
         }
     }
 }

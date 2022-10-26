@@ -1,3 +1,6 @@
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using WeatherAPI.HealthCheck;
 using WeatherAPI.Helper;
 using WeatherAPI.Services;
 
@@ -17,6 +20,17 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// For Health Check UI
+builder.Services.AddHealthChecksUI().AddInMemoryStorage();
+
+// For Health Check Endpoint
+builder.Services
+    .AddHealthChecks()
+    .AddUrlGroup(new Uri(ApiUrlConstants.GEO), nameof(ApiUrlConstants.GEO))
+    .AddUrlGroup(new Uri(ApiUrlConstants.WEATHER), nameof(ApiUrlConstants.WEATHER))
+    .AddUrlGroup(new Uri(ApiUrlConstants.AQ), nameof(ApiUrlConstants.AQ));
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -26,6 +40,15 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+// For Health Check UI
+app.MapHealthChecksUI();
+
+// For Health Check Endpoint
+app.UseHealthChecks("/health", new HealthCheckOptions()
+{
+    Predicate = _ => true,
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+});
 
 app.UseHttpsRedirection();
 

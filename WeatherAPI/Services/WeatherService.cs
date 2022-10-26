@@ -13,8 +13,8 @@ namespace WeatherAPI.Services
         private GeoService _geoService;
         private const int NO_OF_HOURS_IN_DAY = 24;
         FeelsLikeTempForecastSuggestionsDTO? feelsLikeTemp;
-        List<FeelsLikeTempForecastSuggestionsDTO> feelsLikeTempResult = new();
-        List<HourlyTempForeCastAndSuggestions> hourlyTemperatureSuggestions = new();
+        List<FeelsLikeTempForecastSuggestionsDTO?> feelsLikeTempResult = new();
+        List<HourlyTempForeCastAndSuggestionsDTO> hourlyTemperatureSuggestions = new();
 
 
         public WeatherService()
@@ -47,7 +47,7 @@ namespace WeatherAPI.Services
             return "";
         }
 
-        public async Task<List<HourlyTempForeCastAndSuggestions>> GetHourlyTemperatureByCity(string cityName)
+        public async Task<List<HourlyTempForeCastAndSuggestionsDTO>> GetHourlyTemperatureByCity(string cityName)
         {
             var GeoCoordinates = await _geoService.GetGeoCoordinatesByCityName(cityName);
             double latitude = GeoCoordinates!.Results.ToList()[0].Latitude;
@@ -103,7 +103,7 @@ namespace WeatherAPI.Services
             return feelsLikeTempResult;
         }
 
-        public List<HourlyTempForeCastAndSuggestions> GetSuggestionsForHourlyTemperature(GetHourlyTemperatureResponseDTO HourlyTempRspDToResult)
+        public List<HourlyTempForeCastAndSuggestionsDTO> GetSuggestionsForHourlyTemperature(GetHourlyTemperatureResponseDTO HourlyTempRspDToResult)
         {
             double averageTemperature = 0;
             string stringSuggestion = "";
@@ -112,18 +112,18 @@ namespace WeatherAPI.Services
             int startingHour = 0;
             for (int i = 1; i <= NoOfDays; i++)
             {
-                HourlyTempForeCastAndSuggestions hourlyTemperatureSuggestion = new HourlyTempForeCastAndSuggestions();
+                HourlyTempForeCastAndSuggestionsDTO hourlyTemperatureSuggestion = new HourlyTempForeCastAndSuggestionsDTO();
                 List<double> Temperature = HourlyTempRspDToResult!.Hourly!.Temperature_2m!.GetRange(startingHour, 24);
                 foreach (var tempe in Temperature)
                     averageTemperature += tempe;
                 averageTemperature = averageTemperature / 24;
 
-                if (averageTemperature > 30)
-                    stringSuggestion = "Its too Hot. Please plan your days/trip with proper Accessories and Appropriate Activities.";
-                else if(averageTemperature < 16)
-                    stringSuggestion = "Its too Cold. Please plan your days/trip with proper Accessories and Appropriate Activities.";
+                if (averageTemperature > 23)
+                    stringSuggestion = HourlyTemperatureSuggestions.FEELS_HOT;
+                else if (averageTemperature < 16)
+                    stringSuggestion = HourlyTemperatureSuggestions.FEELS_COLD;
                 else
-                    stringSuggestion = "The days are Pleasant. Enjoy your days!!!";
+                    stringSuggestion = HourlyTemperatureSuggestions.FEELS_PLEASANT;
 
                 hourlyTemperatureSuggestion.Day = i;
                 hourlyTemperatureSuggestion.Date = HourlyTempRspDToResult.Hourly.Time[startingHour].Substring(0,10);
