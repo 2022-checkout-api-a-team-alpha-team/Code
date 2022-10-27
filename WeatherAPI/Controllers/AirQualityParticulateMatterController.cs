@@ -15,13 +15,29 @@ namespace WeatherAPI.Controllers
             _service = service;
         }
         
-        [HttpGet("{cityName}")]
+        [HttpGet("/data/{cityName}")]
         public async Task<IActionResult> GetAirQualityParticulateMatterByCityName(string cityName)
         {
             GetAirQualityParticulateMatterResponseDTO response;
             try
             {
                 response = await _service.GetAirQualityParticulateMatterByCityName(cityName);
+            }
+            catch (Exception ex)
+            {
+                //throw;
+                return BadRequest(ex.Message);
+            }
+            return Ok(response);
+        }
+
+        [HttpGet("/suggestion/{cityName}")]
+        public async Task<IActionResult> SuggestionsOnAirQualityParticulateMatter(string cityName)
+        {
+            SuggestionsOnAirQualityParticulateMatterDTO response;
+            try
+            {
+                response = await _service.SuggestionsOnAirQualityParticulateMatter(cityName);
             }
             catch (Exception ex)
             {

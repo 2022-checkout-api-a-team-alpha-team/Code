@@ -25,7 +25,7 @@ namespace WeatherAPI.Tests.ServicesTests
             AllowTrailingCommas = true,
             DictionaryKeyPolicy = JsonNamingPolicy.CamelCase
         };
-        private readonly string expectedResultJson = @"{
+        private readonly string expectedGetResultJson = @"{
             ""latitude"": 3.2000046,
             ""longitude"": 101.600006,
             ""generationtime_ms"": 5.517005920410156,
@@ -64,6 +64,51 @@ namespace WeatherAPI.Tests.ServicesTests
                     ]
                 }
             }";
+        private readonly string expectedSuggestionResultJson = @"{
+            ""latitude"": 3.2000046,
+            ""longitude"": 101.600006,
+            ""utc_offset_seconds"": 0,
+            ""timezone"": ""GMT"",
+            ""timezone_abbreviation"": ""GMT"",
+            ""daily_suggestion"": {
+                ""date"": [
+                    ""2022-10-22T00:00"", ""2022-10-22T06:00"", ""2022-10-22T12:00"", ""2022-10-22T18:00"",
+                    ""2022-10-23T00:00"", ""2022-10-23T06:00"", ""2022-10-23T12:00"", ""2022-10-23T18:00"",
+                    ""2022-10-24T00:00"", ""2022-10-24T06:00"", ""2022-10-24T12:00"", ""2022-10-24T18:00"",
+                    ""2022-10-25T00:00"", ""2022-10-25T06:00"", ""2022-10-25T12:00"", ""2022-10-25T18:00"",
+                    ""2022-10-26T00:00"", ""2022-10-26T06:00"", ""2022-10-26T12:00"", ""2022-10-26T18:00""
+                    ],
+                ""midnight_suggestion"": [
+                    """", """", """", """",
+                    """", """", """", """",
+                    """", """", """", """",
+                    """", """", """", """",
+                    """", """", """", """"
+                    ],
+                ""morning_suggestion"": [
+                    """", """", """", """",
+                    """", """", """", """",
+                    """", """", """", """",
+                    """", """", """", """",
+                    """", """", """", """"
+                    ],
+                ""afternoon_suggestion"": [
+                    """", """", """", """",
+                    """", """", """", """",
+                    """", """", """", """",
+                    """", """", """", """",
+                    """", """", """", """"
+                    ],
+                ""evening_suggestion"": [
+                    """", """", """", """",
+                    """", """", """", """",
+                    """", """", """", """",
+                    """", """", """", """",
+                    """", """", """", """"
+                    ]
+                }
+            }";
+
 
         [SetUp]
         public void Setup()
@@ -75,7 +120,7 @@ namespace WeatherAPI.Tests.ServicesTests
         public void Get_Air_Quality_Particulate_Matter_By_City_Name_Should_Return_Result_And_In_Correct_Type()
         {
             // Arrange
-            var expected = JsonSerializer.Deserialize<GetAirQualityParticulateMatterResponseDTO>(expectedResultJson, options);
+            var expected = JsonSerializer.Deserialize<GetAirQualityParticulateMatterResponseDTO>(expectedGetResultJson, options);
 
             // Act
             var result = _airQualityParticulateMatterService.GetAirQualityParticulateMatterByCityName("Kuala Lumpur").Result;
@@ -90,6 +135,25 @@ namespace WeatherAPI.Tests.ServicesTests
                 .Including(flds => flds.Hourly_Units.Time)
                 .Including(flds => flds.Hourly_Units.PM10)
                 .Including(flds => flds.Hourly_Units.PM2_5)
+                );
+        }
+
+        [Test]
+        public void Suggestions_On_Air_Quality_Particular_Matter_Should_Return_Result_And_In_Correct_Type()
+        {
+            // Arrange
+            var expected = JsonSerializer.Deserialize<SuggestionsOnAirQualityParticulateMatterDTO>(expectedSuggestionResultJson, options);
+
+            // Act
+            var result = _airQualityParticulateMatterService.SuggestionsOnAirQualityParticulateMatter("Kuala Lumpur").Result;
+
+            //Assert
+            result.Should().BeOfType(typeof(SuggestionsOnAirQualityParticulateMatterDTO));
+            result.Should().BeEquivalentTo(expected, options => options
+                .Including(flds => flds.Latitude)
+                .Including(flds => flds.Longitude)
+                .Including(flds => flds.TimeZone)
+                .Including(flds => flds.TimeZone_Abbreviation)
                 );
         }
     }

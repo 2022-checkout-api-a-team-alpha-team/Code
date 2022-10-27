@@ -109,7 +109,7 @@ namespace WeatherAPI.Tests.ControllersTests
         }
 
         [Test]//** Kenny Chiang's example moq test with comments explaining functions of each lines
-        public  async Task Get_Air_Quality_Particulate_Matter_By_City_Name_Should_Return_Result_Via_API()
+        public async Task Get_Air_Quality_Particulate_Matter_By_City_Name_Should_Return_Result_Via_API()
         {
             // Arrange
                     //Mock data - here is using just the object structure with empty values
