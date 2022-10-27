@@ -138,6 +138,28 @@ namespace WeatherAPI.Tests.ControllersTests
         }
 
         [Test]
+        public async Task Get_Hourly_Temperature_By_City_Name_Should_Return()
+        {
+            List<HourlyTempForeCastAndSuggestionsDTO> hourlyTempForecastAndSuggestions = new() { new HourlyTempForeCastAndSuggestionsDTO(), new HourlyTempForeCastAndSuggestionsDTO(), new HourlyTempForeCastAndSuggestionsDTO() };
+            //Arange
+            _mockWeatherService!.Setup(g => g.GetHourlyTemperatureByCity("London")).ReturnsAsync(hourlyTempForecastAndSuggestions);
+
+            // Act
+            var response = await _weatherController!.GetHourlyTemperatureByCity("London");
+
+            //Assert
+            var okResult = response as OkObjectResult;
+            okResult.Should().NotBeNull();
+            okResult!.StatusCode.Should().Be(200);
+            var responseValue = okResult.Value;
+            Assert.AreEqual(200, okResult.StatusCode);
+            Assert.AreEqual(3, hourlyTempForecastAndSuggestions.Count);
+            Assert.That(responseValue, Is.EqualTo(hourlyTempForecastAndSuggestions));
+            Assert.AreEqual(responseValue, hourlyTempForecastAndSuggestions);
+        }
+
+
+        [Test]
         public void Get_Hourly_Temperature_By_City_Name_Should_Return_Ok_When_Given_Right_Input()
         {
             //Arange
