@@ -10,6 +10,7 @@ namespace WeatherAPI.Services
     {
         private readonly HttpClient _httpClient;
         private readonly IGeoService _geoService;
+
         private readonly JsonSerializerOptions options = new()
         {
             PropertyNameCaseInsensitive = true,
@@ -33,78 +34,83 @@ namespace WeatherAPI.Services
             return result;
         }
 
-        public async Task<SuggestionsOnAirQualityParticulateMatterDTO> SuggestionsOnAirQualityParticulateMatter(string cityName)
+        public async Task<SuggestionsOnAirQualityParticulateMatterDTO> SuggestionsOnAirQualityParticulateMatterByCityName(string cityName)
         {
             try
             {
                 var AQPMResult = GetAirQualityParticulateMatterByCityName(cityName).Result;
                 var totalHourCount = AQPMResult.Hourly.Time.Count;
 
-                var result = new SuggestionsOnAirQualityParticulateMatterDTO
-                {
-                    Latitude = AQPMResult.Latitude,
-                    Longitude = AQPMResult.Longitude,
-                    UTC_Offset_Seconds = AQPMResult.UTC_Offset_Seconds,
-                    TimeZone = AQPMResult.TimeZone,
-                    TimeZone_Abbreviation = AQPMResult.TimeZone_Abbreviation,
-                    Daily_Suggestion = new AQPMDailySuggestionDTO
-                    {
-                        Date = new List<string>(),
-                        Midnight_Suggestion = new List<string>(),
-                        Morning_Suggestion = new List<string>(),
-                        Afternoon_Suggestion = new List<string>(),
-                        Evening_Suggestion = new List<string>()
-                    }
-                };
-
-                for (int dayCount = 0; dayCount < totalHourCount; dayCount += 24)
-                {
-                    result.Daily_Suggestion.Date.Add(AQPMResult.Hourly.Time[dayCount][..10]);
-                    for (int rangeOfHour = 0; rangeOfHour < RangeOfHour.DAY_DURATONS.GetLength(0); rangeOfHour++)
-                    {
-                        double? rangeOfHourSumAvgPM25 = 0;
-                        double? rangeOfHourSumAvgPM10 = 0;
-                        bool nullRange = false;
-                        for (int hourCount = dayCount + RangeOfHour.DAY_DURATONS[rangeOfHour, 0]; hourCount < dayCount + RangeOfHour.DAY_DURATONS[rangeOfHour, 0] + RangeOfHour.DAY_DURATONS[rangeOfHour, 1]; hourCount++)
-                        {
-                            if (AQPMResult.Hourly.PM2_5[hourCount] == null || AQPMResult.Hourly.PM10[hourCount] == null)
-                            {
-                                nullRange = true;
-                                break;
-                            }
-                            rangeOfHourSumAvgPM25 += AQPMResult.Hourly.PM2_5[hourCount];
-                            rangeOfHourSumAvgPM10 += AQPMResult.Hourly.PM10[hourCount];
-                        }
-                        if (nullRange)
-                        {
-                            switch (rangeOfHour)
-                            {
-                                case 0: result.Daily_Suggestion.Midnight_Suggestion.Add(AQPMSuggestionMessages.MSG_INSUFFICIENT_DATA); break;
-                                case 1: result.Daily_Suggestion.Morning_Suggestion.Add(AQPMSuggestionMessages.MSG_INSUFFICIENT_DATA); break;
-                                case 2: result.Daily_Suggestion.Afternoon_Suggestion.Add(AQPMSuggestionMessages.MSG_INSUFFICIENT_DATA); break;
-                                case 3: result.Daily_Suggestion.Evening_Suggestion.Add(AQPMSuggestionMessages.MSG_INSUFFICIENT_DATA); break;
-                            }
-                        }
-                        else
-                        {
-                            rangeOfHourSumAvgPM25 /= RangeOfHour.DAY_DURATONS[rangeOfHour, 1];
-                            rangeOfHourSumAvgPM10 /= RangeOfHour.DAY_DURATONS[rangeOfHour, 1];
-                            switch (rangeOfHour)
-                            {
-                                case 0: result.Daily_Suggestion.Midnight_Suggestion.Add(AQPMSuggestion(rangeOfHourSumAvgPM25, rangeOfHourSumAvgPM10)); break;
-                                case 1: result.Daily_Suggestion.Morning_Suggestion.Add(AQPMSuggestion(rangeOfHourSumAvgPM25, rangeOfHourSumAvgPM10)); break;
-                                case 2: result.Daily_Suggestion.Afternoon_Suggestion.Add(AQPMSuggestion(rangeOfHourSumAvgPM25, rangeOfHourSumAvgPM10)); break;
-                                case 3: result.Daily_Suggestion.Evening_Suggestion.Add(AQPMSuggestion(rangeOfHourSumAvgPM25, rangeOfHourSumAvgPM10)); break;
-                            };
-                        }
-                    }
-                }
-            return result;
+                return AQPMSuggestionBuilder(AQPMResult, totalHourCount);
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message + ex.TargetSite?.Name);
             }
+        }
+
+        public SuggestionsOnAirQualityParticulateMatterDTO AQPMSuggestionBuilder(GetAirQualityParticulateMatterResponseDTO AQPMResult, int totalHourCount)
+        {
+            var result = new SuggestionsOnAirQualityParticulateMatterDTO
+            {
+                Latitude = AQPMResult.Latitude,
+                Longitude = AQPMResult.Longitude,
+                UTC_Offset_Seconds = AQPMResult.UTC_Offset_Seconds,
+                TimeZone = AQPMResult.TimeZone,
+                TimeZone_Abbreviation = AQPMResult.TimeZone_Abbreviation,
+                Daily_Suggestion = new AQPMDailySuggestionDTO
+                {
+                    Date = new List<string>(),
+                    Midnight_Suggestion = new List<string>(),
+                    Morning_Suggestion = new List<string>(),
+                    Afternoon_Suggestion = new List<string>(),
+                    Evening_Suggestion = new List<string>()
+                }
+            };
+
+            for (int dayCount = 0; dayCount < totalHourCount; dayCount += 24)
+            {
+                result.Daily_Suggestion.Date.Add(AQPMResult.Hourly.Time[dayCount][..10]);
+                for (int rangeOfHour = 0; rangeOfHour < RangeOfHour.DAY_DURATONS.GetLength(0); rangeOfHour++)
+                {
+                    double? rangeOfHourSumAvgPM25 = 0;
+                    double? rangeOfHourSumAvgPM10 = 0;
+                    bool nullRange = false;
+                    for (int hourCount = dayCount + RangeOfHour.DAY_DURATONS[rangeOfHour, 0]; hourCount < dayCount + RangeOfHour.DAY_DURATONS[rangeOfHour, 0] + RangeOfHour.DAY_DURATONS[rangeOfHour, 1]; hourCount++)
+                    {
+                        if (AQPMResult.Hourly.PM2_5[hourCount] == null || AQPMResult.Hourly.PM10[hourCount] == null)
+                        {
+                            nullRange = true;
+                            break;
+                        }
+                        rangeOfHourSumAvgPM25 += AQPMResult.Hourly.PM2_5[hourCount];
+                        rangeOfHourSumAvgPM10 += AQPMResult.Hourly.PM10[hourCount];
+                    }
+                    if (nullRange)
+                    {
+                        switch (rangeOfHour)
+                        {
+                            case 0: result.Daily_Suggestion.Midnight_Suggestion.Add(AQPMSuggestionMessages.MSG_INSUFFICIENT_DATA); break;
+                            case 1: result.Daily_Suggestion.Morning_Suggestion.Add(AQPMSuggestionMessages.MSG_INSUFFICIENT_DATA); break;
+                            case 2: result.Daily_Suggestion.Afternoon_Suggestion.Add(AQPMSuggestionMessages.MSG_INSUFFICIENT_DATA); break;
+                            case 3: result.Daily_Suggestion.Evening_Suggestion.Add(AQPMSuggestionMessages.MSG_INSUFFICIENT_DATA); break;
+                        }
+                    }
+                    else
+                    {
+                        rangeOfHourSumAvgPM25 /= RangeOfHour.DAY_DURATONS[rangeOfHour, 1];
+                        rangeOfHourSumAvgPM10 /= RangeOfHour.DAY_DURATONS[rangeOfHour, 1];
+                        switch (rangeOfHour)
+                        {
+                            case 0: result.Daily_Suggestion.Midnight_Suggestion.Add(AQPMSuggestion(rangeOfHourSumAvgPM25, rangeOfHourSumAvgPM10)); break;
+                            case 1: result.Daily_Suggestion.Morning_Suggestion.Add(AQPMSuggestion(rangeOfHourSumAvgPM25, rangeOfHourSumAvgPM10)); break;
+                            case 2: result.Daily_Suggestion.Afternoon_Suggestion.Add(AQPMSuggestion(rangeOfHourSumAvgPM25, rangeOfHourSumAvgPM10)); break;
+                            case 3: result.Daily_Suggestion.Evening_Suggestion.Add(AQPMSuggestion(rangeOfHourSumAvgPM25, rangeOfHourSumAvgPM10)); break;
+                        };
+                    }
+                }
+            }
+            return result;
         }
 
         public string AQPMSuggestion(double? rangeOfHourAvgPM25, double? rangeOfHourAvgPM10)

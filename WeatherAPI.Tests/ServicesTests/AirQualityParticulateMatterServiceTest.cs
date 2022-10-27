@@ -67,48 +67,47 @@ namespace WeatherAPI.Tests.ServicesTests
         private readonly string expectedSuggestionResultJson = @"{
             ""latitude"": 3.2000046,
             ""longitude"": 101.600006,
-            ""utc_offset_seconds"": 0,
-            ""timezone"": ""GMT"",
-            ""timezone_abbreviation"": ""GMT"",
-            ""daily_suggestion"": {
+            ""utC_Offset_Seconds"": 0,
+            ""timeZone"": ""GMT"",
+            ""timeZone_Abbreviation"": ""GMT"",
+            ""daily_Suggestion"": {
                 ""date"": [
-                    ""2022-10-22T00:00"", ""2022-10-22T06:00"", ""2022-10-22T12:00"", ""2022-10-22T18:00"",
-                    ""2022-10-23T00:00"", ""2022-10-23T06:00"", ""2022-10-23T12:00"", ""2022-10-23T18:00"",
-                    ""2022-10-24T00:00"", ""2022-10-24T06:00"", ""2022-10-24T12:00"", ""2022-10-24T18:00"",
-                    ""2022-10-25T00:00"", ""2022-10-25T06:00"", ""2022-10-25T12:00"", ""2022-10-25T18:00"",
-                    ""2022-10-26T00:00"", ""2022-10-26T06:00"", ""2022-10-26T12:00"", ""2022-10-26T18:00""
+                    ""2022-10-27"",
+                    ""2022-10-28"",
+                    ""2022-10-29"",
+                    ""2022-10-30"",
+                    ""2022-10-31""
                     ],
-                ""midnight_suggestion"": [
-                    """", """", """", """",
-                    """", """", """", """",
-                    """", """", """", """",
-                    """", """", """", """",
-                    """", """", """", """"
+                ""midnight_Suggestion"": [
+                    ""The air quality is usual."",
+                    ""The air quality is usual."",
+                    ""The air quality is usual."",
+                    ""The air quality is usual."",
+                    ""The air quality is usual.""
                     ],
-                ""morning_suggestion"": [
-                    """", """", """", """",
-                    """", """", """", """",
-                    """", """", """", """",
-                    """", """", """", """",
-                    """", """", """", """"
+                ""morning_Suggestion"": [
+                    ""The air quality is usual."",
+                    ""The air quality is usual."",
+                    ""The air quality is usual."",
+                    ""The air quality is usual."",
+                    ""The air quality is usual.""
                     ],
-                ""afternoon_suggestion"": [
-                    """", """", """", """",
-                    """", """", """", """",
-                    """", """", """", """",
-                    """", """", """", """",
-                    """", """", """", """"
+                ""afternoon_Suggestion"": [
+                    ""The air quality is usual."",
+                    ""The air quality is usual."",
+                    ""The air quality is not very good for air-sensitive individuals."",
+                    ""The air quality is not very good for air-sensitive individuals."",
+                    ""The air quality is not very good for air-sensitive individuals.""
                     ],
-                ""evening_suggestion"": [
-                    """", """", """", """",
-                    """", """", """", """",
-                    """", """", """", """",
-                    """", """", """", """",
-                    """", """", """", """"
+                ""evening_Suggestion"": [
+                    ""The air quality is usual."",
+                    ""The air quality is usual."",
+                    ""The air quality is usual."",
+                    ""The air quality is not very good for air-sensitive individuals."",
+                    ""The air quality is usual.""
                     ]
                 }
             }";
-
 
         [SetUp]
         public void Setup()
@@ -145,7 +144,7 @@ namespace WeatherAPI.Tests.ServicesTests
             var expected = JsonSerializer.Deserialize<SuggestionsOnAirQualityParticulateMatterDTO>(expectedSuggestionResultJson, options);
 
             // Act
-            var result = _airQualityParticulateMatterService.SuggestionsOnAirQualityParticulateMatter("Kuala Lumpur").Result;
+            var result = _airQualityParticulateMatterService.SuggestionsOnAirQualityParticulateMatterByCityName("Kuala Lumpur").Result;
 
             //Assert
             result.Should().BeOfType(typeof(SuggestionsOnAirQualityParticulateMatterDTO));
