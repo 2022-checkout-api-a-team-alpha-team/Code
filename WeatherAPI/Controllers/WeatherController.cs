@@ -41,6 +41,14 @@ namespace WeatherAPI.Controllers
             }
         }
 
+        /// <summary>
+        /// This API returns Current day's Hourly forecasts and Clothing Suggestions based on City's Feels Like temperature
+        /// </summary>
+        /// <param name="cityName"></param>
+        /// <returns>Returns current day/ 1 day forecast and suggestions - 
+        /// FeelsLikeTempForecastSuggestionsDTO - Date, Time_24_Hour_Clock, Temperature, FeelsLikeTemperature and Suggestion
+        /// </returns>
+        /// <response code="200">Returns successful response with required data</response>
         [HttpGet("FeelsLikeTemperature/{cityName}")]
         public async Task<IActionResult> GetHourlyFeelsLikeTemperatureByCity(string cityName)
         {
