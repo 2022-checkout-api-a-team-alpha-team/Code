@@ -1,18 +1,39 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using WeatherAPI.DTOs;
+﻿using Microsoft.AspNetCore.Mvc;
 using WeatherAPI.Services;
+using WeatherAPI.Helper;
+using WeatherAPI.DTOs;
 
 namespace WeatherAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AirQualityParticulateMatterController : ControllerBase
+
+    public class AirQualityController : ControllerBase
     {
-        private IAirQualityParticulateMatterService _service;
-        public AirQualityParticulateMatterController(IAirQualityParticulateMatterService service)
+        private IAirQualityService _service;
+        public AirQualityController(IAirQualityService service)
         {
             _service = service;
+        }
+
+
+        [HttpGet("Pollen/{cityName}")]
+        public async Task<IActionResult> GetPollenData(string cityName)
+        {
+            try
+            {
+                if (String.IsNullOrEmpty(cityName))
+                    return BadRequest(ErrorHelper.PARAMETER_CANNOT_BE_NULL_OR_EMPTY);
+
+
+                var response = await _service.GetPollenData(cityName);
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error:" + e.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, ErrorHelper.SERVER_ERROR);
+            }
         }
 
         /// <summary>
@@ -71,7 +92,7 @@ namespace WeatherAPI.Controllers
         ///     }
         /// </remarks>
         /// <response code="200">Returns Request successfully.</response>
-        [HttpGet("{cityName}")]
+        [HttpGet("ParticulateMatter/{cityName}")]
         public async Task<IActionResult> SuggestionsOnAirQualityParticulateMatterByCityName(string cityName)
         {
             SuggestionsOnAirQualityParticulateMatterDTO response;
@@ -86,5 +107,6 @@ namespace WeatherAPI.Controllers
             }
             return Ok(response);
         }
+
     }
 }

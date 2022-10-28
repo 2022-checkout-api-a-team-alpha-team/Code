@@ -1,24 +1,49 @@
 ﻿using FluentAssertions;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-using Moq;
 using NUnit.Framework;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
+using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
-using WeatherAPI.Controllers;
 using WeatherAPI.DTOs;
+using WeatherAPI.Helper;
 using WeatherAPI.Services;
 
 namespace WeatherAPI.Tests.ServicesTests
 {
-    public class AirQualityParticulateMatterServiceTest
+    public class AirQualityServiceTests 
     {
-        private AirQualityParticulateMatterService _airQualityParticulateMatterService;
+        private IAirQualityService _airQualityService;
+
+        [SetUp]
+        public void Setup()
+        {
+            var client = new HttpClient();
+            client.BaseAddress = new Uri(ConstantsHelper.AQ_BASE);
+            var geoService = new GeoService();
+            _airQualityService = new AirQualityService(client, geoService);
+        }
+
+        [Test]
+        public async Task GetPollenData_Should_Return_DTO() 
+        {
+            // Act
+            var actualResult = await _airQualityService.GetPollenData("London");
+            var hourlyResults = actualResult?.Hourly;
+
+            // Assert
+            Assert.NotNull(hourlyResults);
+            Assert.AreEqual(DateTime.Today, DateTime.Parse(hourlyResults.Time[0]));
+            Assert.Greater(hourlyResults.BirchPollen.Count, 0);
+            Assert.Greater(hourlyResults.AlderPollen.Count, 0);
+            Assert.Greater(hourlyResults.GrassPollen.Count, 0);
+            Assert.Greater(hourlyResults.OlivePollen.Count, 0);
+            Assert.Greater(hourlyResults.RagweedPollen.Count, 0);
+            Assert.Greater(hourlyResults.MugwortPollen.Count, 0);
+        }
+
+
+
+        //----------------------------------------
         private readonly JsonSerializerOptions options = new()
         {
             PropertyNameCaseInsensitive = true,
@@ -109,11 +134,7 @@ namespace WeatherAPI.Tests.ServicesTests
                 }
             }";
 
-        [SetUp]
-        public void Setup()
-        {
-            _airQualityParticulateMatterService = new AirQualityParticulateMatterService();
-        }
+
 
         [Test]
         public void Get_Air_Quality_Particulate_Matter_By_City_Name_Should_Return_Result_And_In_Correct_Type()
@@ -122,7 +143,7 @@ namespace WeatherAPI.Tests.ServicesTests
             var expected = JsonSerializer.Deserialize<GetAirQualityParticulateMatterResponseDTO>(expectedGetResultJson, options);
 
             // Act
-            var result = _airQualityParticulateMatterService.GetAirQualityParticulateMatterByCityName("Kuala Lumpur").Result;
+            var result = _airQualityService.GetAirQualityParticulateMatterByCityName("Kuala Lumpur").Result;
 
             //Assert
             result.Should().BeOfType(typeof(GetAirQualityParticulateMatterResponseDTO));
@@ -144,7 +165,7 @@ namespace WeatherAPI.Tests.ServicesTests
             var expected = JsonSerializer.Deserialize<SuggestionsOnAirQualityParticulateMatterDTO>(expectedSuggestionResultJson, options);
 
             // Act
-            var result = _airQualityParticulateMatterService.SuggestionsOnAirQualityParticulateMatterByCityName("Kuala Lumpur").Result;
+            var result = _airQualityService.SuggestionsOnAirQualityParticulateMatterByCityName("Kuala Lumpur").Result;
 
             //Assert
             result.Should().BeOfType(typeof(SuggestionsOnAirQualityParticulateMatterDTO));

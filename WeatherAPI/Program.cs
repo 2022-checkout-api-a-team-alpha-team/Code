@@ -11,9 +11,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<IGeoService, GeoService>();
 
 builder.Services.AddScoped<IWeatherService, WeatherService>();
-builder.Services.AddScoped<IAirQualityParticulateMatterService, AirQualityParticulateMatterService>();
 
-builder.Services.AddHttpClient<IAirQualityPollenService, AirQualityPollenService>(client => 
+builder.Services.AddHttpClient<IAirQualityService, AirQualityService>(client => 
     client.BaseAddress = new Uri(ConstantsHelper.AQ_BASE));
 
 builder.Services.AddControllers();

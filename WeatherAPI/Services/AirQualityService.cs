@@ -1,36 +1,77 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
+﻿using System.Globalization;
 using System.Text.Json;
 using WeatherAPI.DTOs;
 using WeatherAPI.Helper;
+using WeatherAPI.Models;
 
 namespace WeatherAPI.Services
 {
-    public class AirQualityParticulateMatterService : IAirQualityParticulateMatterService
+    public class AirQualityService : IAirQualityService
     {
         private readonly HttpClient _httpClient;
         private readonly IGeoService _geoService;
-
-        private readonly JsonSerializerOptions options = new()
+        private readonly JsonSerializerOptions options = new ()
         {
             PropertyNameCaseInsensitive = true,
             AllowTrailingCommas = true,
             DictionaryKeyPolicy = JsonNamingPolicy.CamelCase
         };
-        
-        public AirQualityParticulateMatterService()
+
+        public AirQualityService(HttpClient httpClient, IGeoService geoService)
         {
-            _httpClient = new HttpClient();
-            _geoService = new GeoService();
+            _httpClient = httpClient;
+            _geoService = geoService;
         }
-        
+
+        public async Task<GetPollenDTO> GetPollenData(string cityName)
+        {
+            var coordinates = await _geoService.GetGeoCoordinatesByCityName(cityName);
+
+            if (coordinates.Results != null && coordinates.Results.Count > 0)
+            {
+                GeoCoordDTO coordDTO = coordinates.Results[0];
+                var latitude = coordDTO.Latitude.ToString(CultureInfo.InvariantCulture);
+                var longitude = coordDTO.Longitude.ToString(CultureInfo.InvariantCulture);
+                var query = $"?latitude={latitude}&longitude={longitude}&hourly=alder_pollen,birch_pollen,grass_pollen,mugwort_pollen,olive_pollen,ragweed_pollen";
+
+                var result = await _httpClient.GetFromJsonAsync<GetPollenDTO>(query, options);
+                return result;
+            }
+            return null;
+        }
+
+        public async Task<PollenSuggestion> GetPollenSuggestion(string cityName)
+        {
+            var result = await GetPollenData(cityName);
+            string message = "No pollen in the air.";
+            List<string> pollenNames = new List<string>();
+
+            if (result != null && result.Hourly != null) 
+            {
+                foreach (var keyValuePair in result.Hourly.GetPollens())
+                {
+                    if (keyValuePair.Value.Any(item => item != null && item > 0))
+                    {
+                        pollenNames.Add(keyValuePair.Key);
+                    }
+                }
+            }
+            if (pollenNames.Count > 0)
+                message = $"Be careful in case of allergies, the presence of pollen in the air is possible ({String.Join(",", pollenNames)}).";
+
+            return new PollenSuggestion(message);
+        }
+
+
+        //----------------------------------
+
         public async Task<GetAirQualityParticulateMatterResponseDTO> GetAirQualityParticulateMatterByCityName(string cityName)
         {
-            var GeoCoordOfCity = _geoService.GetGeoCoordinatesByCityName(cityName);
-            double lat = GeoCoordOfCity.Result.Results.ToList()[0].Latitude;
-            double lon = GeoCoordOfCity.Result.Results.ToList()[0].Longitude;
+            var GeoCoordOfCity = await _geoService.GetGeoCoordinatesByCityName(cityName);
+            double lat = GeoCoordOfCity.Results.ToList()[0].Latitude;
+            double lon = GeoCoordOfCity.Results.ToList()[0].Longitude;
 
-            var result = await _httpClient.GetFromJsonAsync<GetAirQualityParticulateMatterResponseDTO>(ConstantsHelper.AQ_BASE + $"?latitude={lat.ToString().Trim()}&longitude={lon.ToString().Trim()}&hourly=pm10,pm2_5", options);
+            var result = await _httpClient.GetFromJsonAsync<GetAirQualityParticulateMatterResponseDTO>($"?latitude={lat.ToString().Trim()}&longitude={lon.ToString().Trim()}&hourly=pm10,pm2_5", options);
             return result;
         }
 
@@ -38,7 +79,7 @@ namespace WeatherAPI.Services
         {
             try
             {
-                var AQPMResult = GetAirQualityParticulateMatterByCityName(cityName).Result;
+                var AQPMResult = await GetAirQualityParticulateMatterByCityName(cityName);
                 var totalHourCount = AQPMResult.Hourly.Time.Count;
 
                 return AQPMSuggestionBuilder(AQPMResult, totalHourCount);
