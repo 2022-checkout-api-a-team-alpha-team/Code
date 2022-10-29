@@ -1,7 +1,4 @@
-﻿using Newtonsoft.Json;
-using System.Text.Json.Serialization;
-
-namespace WeatherAPI.DTOs
+﻿namespace WeatherAPI.DTOs.Pollen
 {
     public class GetPollenDTO
     {

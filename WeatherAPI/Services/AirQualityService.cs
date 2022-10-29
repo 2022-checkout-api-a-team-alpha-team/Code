@@ -1,8 +1,8 @@
 ﻿using System.Globalization;
 using System.Text.Json;
 using WeatherAPI.DTOs;
+using WeatherAPI.DTOs.Pollen;
 using WeatherAPI.Helper;
-using WeatherAPI.Models;
 
 namespace WeatherAPI.Services
 {
@@ -16,6 +16,8 @@ namespace WeatherAPI.Services
             AllowTrailingCommas = true,
             DictionaryKeyPolicy = JsonNamingPolicy.CamelCase
         };
+        private const int HOURS_PER_DAY = 24;
+        private const int DAYS_WINDOW = 5;
 
         public AirQualityService(HttpClient httpClient, IGeoService geoService)
         {
@@ -40,28 +42,29 @@ namespace WeatherAPI.Services
             return null;
         }
 
-        public async Task<PollenSuggestion> GetPollenSuggestion(string cityName)
+        public async Task<PollenAggregatedDTO> GetPollenSuggestion(string cityName)
         {
-            var result = await GetPollenData(cityName);
-            string message = "No pollen in the air.";
-            List<string> pollenNames = new List<string>();
-
-            if (result != null && result.Hourly != null) 
+            var result = new PollenAggregatedDTO();
+            var pollenData = await GetPollenData(cityName);
+            if (pollenData != null && pollenData.Hourly != null)
             {
-                foreach (var keyValuePair in result.Hourly.GetPollens())
+                for (int i = 0; i < DAYS_WINDOW; i++)
                 {
-                    if (keyValuePair.Value.Any(item => item != null && item > 0))
+                    string key = DateTime.Parse(pollenData.Hourly.Time[i * HOURS_PER_DAY]).ToShortDateString();
+                    var pollenDaily = new PollenDailyAggregatedDTO();
+                    foreach (var keyValuePair in pollenData.Hourly.GetPollens())
                     {
-                        pollenNames.Add(keyValuePair.Key);
+                        pollenDaily.Pollens[keyValuePair.Key] = keyValuePair.Value
+                            .Skip(i * HOURS_PER_DAY)
+                            .Take(HOURS_PER_DAY)
+                            .Select(v => v ?? 0)
+                            .Max();
                     }
+                    result.Items[key] = pollenDaily;
                 }
             }
-            if (pollenNames.Count > 0)
-                message = $"Be careful in case of allergies, the presence of pollen in the air is possible ({String.Join(",", pollenNames)}).";
-
-            return new PollenSuggestion(message);
+            return result;
         }
-
 
         //----------------------------------
 

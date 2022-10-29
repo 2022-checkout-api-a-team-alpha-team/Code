@@ -10,6 +10,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using WeatherAPI.Controllers;
 using WeatherAPI.DTOs;
+using WeatherAPI.DTOs.Pollen;
 using WeatherAPI.Helper;
 using WeatherAPI.Services;
 
@@ -36,7 +37,7 @@ namespace WeatherAPI.Tests.ControllersTests
             _mockAirQualityService.Setup(g => g.GetPollenData("London")).ReturnsAsync(new GetPollenDTO());
 
             //Act
-            var response = await _airQualityController.GetPollenData("London");
+            var response = await _airQualityController.GetPollenSuggestion("London");
 
             //Assert
             var okResult = response as OkObjectResult;
@@ -47,7 +48,7 @@ namespace WeatherAPI.Tests.ControllersTests
         public async Task GetPollenData_Should_Return_Bad_Request()
         {
             //Act
-            var response = await _airQualityController.GetPollenData(null);
+            var response = await _airQualityController.GetPollenSuggestion(null);
 
             //Assert
             var badReqObjResult = response as BadRequestObjectResult;
@@ -59,10 +60,10 @@ namespace WeatherAPI.Tests.ControllersTests
         public async Task GetPollenData_Should_Return_Service_Error()
         {
             //Arrange
-            _mockAirQualityService.Setup(g => g.GetPollenData("London")).Throws<HttpRequestException>();
+            _mockAirQualityService.Setup(g => g.GetPollenSuggestion("London")).Throws<HttpRequestException>();
 
             //Act
-            var response = await _airQualityController.GetPollenData("London");
+            var response = await _airQualityController.GetPollenSuggestion("London");
 
             //Assert
             var errorResult = response as ObjectResult;

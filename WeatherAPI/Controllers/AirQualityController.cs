@@ -10,23 +10,27 @@ namespace WeatherAPI.Controllers
 
     public class AirQualityController : ControllerBase
     {
-        private IAirQualityService _service;
+        private readonly IAirQualityService _service;
         public AirQualityController(IAirQualityService service)
         {
             _service = service;
         }
 
 
+        /// <summary>
+        /// This API returns the object that contains the suggesttion based on presence of pollens in the air.
+        /// </summary>
+        /// <param name="cityName">Insert city name.</param>
+        /// <returns>Returns 5 days pollen forecast.</returns>
         [HttpGet("Pollen/{cityName}")]
-        public async Task<IActionResult> GetPollenData(string cityName)
+        public async Task<IActionResult> GetPollenSuggestion(string cityName)
         {
             try
             {
                 if (String.IsNullOrEmpty(cityName))
                     return BadRequest(ErrorHelper.PARAMETER_CANNOT_BE_NULL_OR_EMPTY);
 
-
-                var response = await _service.GetPollenData(cityName);
+                var response = await _service.GetPollenSuggestion(cityName);
                 return Ok(response);
             }
             catch (Exception e)

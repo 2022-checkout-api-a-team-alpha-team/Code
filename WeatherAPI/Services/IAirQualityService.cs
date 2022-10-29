@@ -1,12 +1,12 @@
 ﻿using WeatherAPI.DTOs;
-using WeatherAPI.Models;
+using WeatherAPI.DTOs.Pollen;
 
 namespace WeatherAPI.Services
 {
     public interface IAirQualityService
     {
         Task<GetPollenDTO> GetPollenData(string cityName);
-        Task<PollenSuggestion> GetPollenSuggestion(string cityName);
+        Task<PollenAggregatedDTO> GetPollenSuggestion(string cityName);
 
         Task<GetAirQualityParticulateMatterResponseDTO> GetAirQualityParticulateMatterByCityName(string cityName);
 
