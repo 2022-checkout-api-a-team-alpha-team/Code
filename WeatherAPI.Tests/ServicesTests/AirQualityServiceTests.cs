@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using NUnit.Framework;
 using System;
+using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -32,7 +33,7 @@ namespace WeatherAPI.Tests.ServicesTests
 
             // Assert
             Assert.NotNull(hourlyResults);
-            Assert.AreEqual(DateTime.Today, DateTime.Parse(hourlyResults.Time[0]));
+            Assert.Contains(DateTime.Today, hourlyResults.Time.Select(DateTime.Parse).ToArray());
             Assert.Greater(hourlyResults.BirchPollen.Count, 0);
             Assert.Greater(hourlyResults.AlderPollen.Count, 0);
             Assert.Greater(hourlyResults.GrassPollen.Count, 0);
