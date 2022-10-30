@@ -12,6 +12,7 @@ using WeatherAPI.Controllers;
 using WeatherAPI.DTOs;
 using WeatherAPI.Helper;
 using WeatherAPI.Services;
+using IdentityModel.OidcClient;
 
 namespace WeatherAPI.Tests.ControllersTests
 {
@@ -20,7 +21,7 @@ namespace WeatherAPI.Tests.ControllersTests
         private WeatherController? _weatherController;
         private Mock<IWeatherService>? _mockWeatherService;
 
-        private const int FEELS_LIKE_TEMP_NO_OF_HOURS = 3;
+        private const int FEELS_LIKE_TEMP_NO_OF_HOURS = 2;
 
         [SetUp]
         public void Setup()
@@ -46,6 +47,27 @@ namespace WeatherAPI.Tests.ControllersTests
         }
 
         [Test]
+        public void Get_Hourly_Feels_Like_Temperature_By_City_Should_Return_The_Expected_Response()
+        {
+            List<FeelsLikeTempForecastSuggestionsDTO> expectedValue = new() { new FeelsLikeTempForecastSuggestionsDTO() };
+            //Arange
+            _mockWeatherService!.Setup(g => g.GetHourlyFeelsLikeTemperatureByCity("London")).ReturnsAsync(expectedValue);
+
+            //Act
+            var response = _weatherController!.GetHourlyFeelsLikeTemperatureByCity("London").Result;
+
+            //Assert
+            var actualResult = response as OkObjectResult;
+            var responseValue = actualResult!.Value;
+            responseValue.Should().NotBeNull();
+            _mockWeatherService.Verify(c => c.GetHourlyFeelsLikeTemperatureByCity(It.IsAny<string>()), Times.Once());
+            Assert.AreEqual(200, actualResult.StatusCode);
+            Assert.That(actualResult, Is.TypeOf<OkObjectResult>());
+            Assert.That(responseValue, Is.EqualTo(expectedValue));
+            Assert.AreEqual(responseValue, expectedValue);
+        }
+
+        [Test]
         public void Get_Hourly_Feels_Like_Temperature_By_City_Should_Return_BadRequest_When_Given_Wrong_Input()
         {
             //Act
@@ -65,47 +87,25 @@ namespace WeatherAPI.Tests.ControllersTests
             badResult.Should().NotBeNull();
             badResult?.StatusCode.Should().Be(400);
             badResult?.Value!.ToString()!.Equals(ErrorHelper.PARAMETER_CANNOT_BE_NULL_OR_EMPTY).Should().BeTrue();
-        }      
-       
+        }
+
         /// <summary>
         /// Method to prepare dummy data object for feels like temperature forcast suggestions for mock service
         /// </summary>
         /// <returns>List of suggestions and data based on feels like temperature forecast</returns>
         private List<FeelsLikeTempForecastSuggestionsDTO> GetFeelsLikeTemperatureObj()
         {
-            List<string>? dateList = new();
-            List<double>? temperatureList = new();
-            List<double>? feelsLikeTempList = new();
             FeelsLikeTempForecastSuggestionsDTO feelsLikeTemp;
             List<FeelsLikeTempForecastSuggestionsDTO> feelsLikeTempResult = new();
-
             DateTime date = DateTime.Now;
-            dateList.Add(date.ToString());
-
-            for (int i = 0; i < FEELS_LIKE_TEMP_NO_OF_HOURS - 1; i++)
-            {
-                dateList.Add(date.AddHours(1).ToString());
-            }
-
             for (int i = 0; i < FEELS_LIKE_TEMP_NO_OF_HOURS; i++)
-            {
-                temperatureList.Add(Random.Shared.Next(10, 20));
-                feelsLikeTempList.Add(Random.Shared.Next(10, 20));
-            }
-            for (int i = 0; i < dateList.Count; i++)
-            {
+            { 
                 feelsLikeTemp = new();
-                feelsLikeTemp.Date = dateList[i].Substring(0,11);
-                feelsLikeTemp.Time_24_Hour_Clock = dateList[i].Substring(11,5);
-                feelsLikeTemp.Temperature = temperatureList[i];
-                feelsLikeTemp.FeelsLikeTemperature = feelsLikeTempList[i];
-                if (feelsLikeTempList[i] < temperatureList[i])
-                    feelsLikeTemp.Suggestion = FeelsLikeTemperatureSuggestions.FEELS_LIKE_TEMP_COLD;
-                else if (feelsLikeTempList[i] > temperatureList[i])
-                    feelsLikeTemp.Suggestion = FeelsLikeTemperatureSuggestions.FEELS_LIKE_TEMP_HOT;
-                else
-                    feelsLikeTemp.Suggestion = FeelsLikeTemperatureSuggestions.FEELS_LIKE_TEMP_JUST_RIGHT;
-
+                feelsLikeTemp.Date = date.ToString().Substring(0, 11);
+                feelsLikeTemp.Time_24_Hour_Clock = date.AddHours(i).ToString().Substring(11, 5);
+                feelsLikeTemp.Temperature = 15.5;
+                feelsLikeTemp.FeelsLikeTemperature = 16;
+                feelsLikeTemp.Suggestion = FeelsLikeTemperatureSuggestions.FEELS_LIKE_TEMP_COLD;
                 feelsLikeTempResult.Add(feelsLikeTemp);
             }
             return feelsLikeTempResult;
