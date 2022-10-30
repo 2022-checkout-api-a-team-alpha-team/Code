@@ -138,7 +138,8 @@ This API endpoint will return the results as shown in the below figure.
 
 
 ## Contributing
-Contributors names.
+Contributors names:
+
 ###### Kateryna
 ###### Prasanna
 ###### Sabitha
