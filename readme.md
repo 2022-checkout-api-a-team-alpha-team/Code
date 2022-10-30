@@ -133,7 +133,7 @@ This API endpoint will return the results as shown in the below figure.
 ![image](https://user-images.githubusercontent.com/111776991/198899185-5dc84150-c8c9-44e3-a165-6ba2e401bae2.png)
 
 
-###### Shahzaib
+###### Shahzaib - current Weather and suggestion details
 
 
 
