@@ -9,8 +9,8 @@ This is a very useful C# solution to provide the Weather, Geo and Air quality in
 ## Table of Contents
 
 - [About](#about)
-- [Getting Started](#getting_started)
-- [Installation/ Usage](#installation/_usage)
+- [Pre-requisites](#Pre-requisites)
+- [Instructions/ Usage](#Instructions/_Usage)
 - [Contributing](#contributing)
 
 ## About
