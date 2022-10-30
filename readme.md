@@ -1,5 +1,5 @@
 # Weather API
-This is a very useful C# solution to provide the Weather, Geo and Air quality information for an inputted location, using third party APIs and does the following:
+This is a very useful ASP .Net Web API(C#) solution to provide Suggestions based on the Weather and Air quality information for an inputted location, using third party free APIs and does the following:
 - keeps the user aware of air quality regarding pollen and particulate matter in air
 - suggests whether the user can go out based on the air quality of the inputted location
 - provides the user the current weather, weekly forecast and hourly feels like temperature forecast
@@ -47,12 +47,13 @@ The endpoints used in this application are:
 
 #### 1. Suggestions based on Weekly Forecast:
 
+- The Endpoint 'WeeklyForecast by City' gives the Suggestions based on the Average Temperature along with Date, Day and Average Temperature. It communicates with public free WeatherForecast API and gets the response as JSON. The actual response is list of hourly temperature which is the Air temperature at 2 meters above ground. Added logic to get the Average temperature from hourly temperatures and give Suggestions based on the AverageTemperature.
+
 ![image](https://user-images.githubusercontent.com/111776991/198899668-25887d42-1621-4a5e-b255-3b4240a407f2.png)
 
-###### Prasanna
-
-
 #### 2. Suggestions based on Hourly Feels Like Temperature Forecast for the current day:
+
+- The Endpoint 'FeelsLikeTemperature by City' gives the Suggestions based on the hourly Feels Like Temperature for the current day along with Date, Time_24_hour_Clock, Temperature and Feels_Like_Temperature. It communicates with public free WeatherForecast API and gets the response as JSON. The actual response is list of Apparent temperature which is the perceived feels-like temperature combining wind chill factor, relative humidity and solar radiation. Added logic to compare the apparent temperature against actual temperature to give clothing Suggestions.
 
 ![image](https://user-images.githubusercontent.com/111776991/198899888-20e6e1fe-c775-45e4-b855-a4de8a2d3d79.png)
 
@@ -108,11 +109,26 @@ When you run the application, the swagger will open and show the different endpo
 
 ###### Kateryna - Pollen details
 ###### Kenny - Particulate Matter details
-###### Prasanna - Weekly Forecast
+### GET Weekly Forecast
+It gives Weekly Forecast and Suggestions based on the Average Temperature along with Date, Day and Average Temperature. To get Weekly Forecast and Suggestions click on the endpoint as shown below.
+![image](https://user-images.githubusercontent.com/111745375/198904906-1706f921-5aab-4116-a8c2-e5bbfdf46873.png)
+
+Then the below details will be seen.
+
+![image](https://user-images.githubusercontent.com/111745375/198904967-2685823a-325e-40ff-84de-c51be68396e6.png)
+
+
+When you click on the button ![image](https://user-images.githubusercontent.com/111745375/198905009-25718a88-99e7-4108-8025-08dca8382ec0.png) the text box for cityName will be anabled. Enter the City Name (Location) as input in the textbox and then click the Execute button.
+
+![image](https://user-images.githubusercontent.com/111745375/198905215-8ec380d9-9d88-46c2-871c-0c4426519eed.png)
+
+This API endpoint will return the results as shown in the below figure.
+![image](https://user-images.githubusercontent.com/111745375/198905142-634191b8-e463-4eae-8eaa-068d7b516b58.png)
+
 
 
 ### GET Hourly Weather Forecast - based on Feels Like Temperature
-
+It gives the Suggestions based on the hourly Feels Like Temperature forecast for the current day along with Date, Time_24_hour_Clock, Temperature and Feels_Like_Temperature.
 If you are planning to go out and you would like to get suggestions based on Feels Like Temperature for the current day to dress up accordingly, then
 click on the endpoint as shown below.
 ![image](https://user-images.githubusercontent.com/111776991/198898848-b274a2c3-54b9-4925-8182-ad9f45612b5d.png)
@@ -140,7 +156,7 @@ This API endpoint will return the results as shown in the below figure.
 Contributors names:
 
 ###### Kateryna
-###### Prasanna
-###### Sabitha
+###### Prasanna devi Rengakrishnan
+###### Sabitha Banu Jamal Mohamed
 ###### Shahzaib
 ###### Kenny
