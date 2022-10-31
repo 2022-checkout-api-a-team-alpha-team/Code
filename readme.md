@@ -115,7 +115,14 @@ It gives the suggestions based on the hourly pollen concentration data for requi
 
 ![image](https://user-images.githubusercontent.com/111776991/198899484-a72a7884-e845-4124-bdde-be6b222c6100.png)
 
-If you are planning to spend some time on nature and you would like to get suggestions based on Air Quality Pollen then click on the endpoint and press “Try it out” button (so the text box for cityName will be anabled). Enter the City Name (Location) as input in the textbox and then click the Execute button.
+If you are planning to spend some time on nature and you would like to get suggestions based on Air Quality Pollen then click on the endpoint and press “Try it out” button (so the text box for cityName will be anabled).
+
+![AQ1](https://user-images.githubusercontent.com/111804400/199126334-2d50b126-c0c7-48a5-bce1-f79c54addd76.png)
+
+Enter the City Name (Location) as input in the textbox and then click the Execute button.
+This API endpoint will return the results as shown in the below figure.
+
+![AQ2](https://user-images.githubusercontent.com/111804400/199126346-9f6653dd-a05a-4e78-9a0b-940a17eb0dfa.png)
 
 
 ###### Kenny - Particulate Matter details
