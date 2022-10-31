@@ -38,10 +38,10 @@ The endpoints used in this application are:
 
 ### Geo:
 
+#### 1. Geo Coordinates of the city:
+- We need the geo coordinates to get the weather information of a city so this api takes a city name returns the geo coordinates.
+
 ![image](https://user-images.githubusercontent.com/111776991/198899600-abea6789-bf9b-4aca-b712-905a148e233d.png)
-
-###### Shahzaib
-
 
 ### Weather:
 
@@ -64,9 +64,10 @@ The endpoints used in this application are:
 
 #### 3. Suggestions based on Current Weather:
 
+- This api takes a city name and returns the weather data with suggestions for the next 7 days. The suggestions are based on minimum temperature each day. If the temperature is 15 degree or lower then it is probably a little cold so you need to wear a jacket or a jumper. If the temperature is greater than 15 degree celcius but less than or equal to 25 degree celcius then you can wear clothes as you like. If the temperature is more than 25 then It is a little hot so you should wear silk clothes.
+
 ![image](https://user-images.githubusercontent.com/111776991/198899668-25887d42-1621-4a5e-b255-3b4240a407f2.png)
 
-###### Shahzaib
 
 
 
