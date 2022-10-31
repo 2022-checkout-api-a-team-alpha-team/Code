@@ -168,6 +168,12 @@ This API endpoint will return the results as shown in the below figure.
 ###### Shahzaib - current Weather and suggestion details
 
 
+### HealthChecks Implementation 
+Weather API projects also includes a /health endpoint to give the health of the application. It checks the response from external API services:
+- https://geocoding-api.open-meteo.com (for GeoCoding)
+- https://api.open-meteo.com (for Weather Forecast)
+- https://air-quality-api.open-meteo.com (for Air Quality)
+
 
 ## Contributing
 Contributors names:
