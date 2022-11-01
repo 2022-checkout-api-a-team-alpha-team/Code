@@ -35,6 +35,7 @@ The endpoints used in this application are:
 ![image](https://user-images.githubusercontent.com/111776991/198899531-76e7e818-e0f1-4b42-8f06-d64e12428b96.png)
 
 ###### Kenny
+This API endpoint provides advice based on the quality and freshness of air that is quantified by the amount of particulate matters in the air. The EPA categorized the air quality into two size thresholds - >=10ug and >=2.5ug, and 7 density levels of these particulate matters exists within a cubic metre of air. This API obtains 5 days of hourly levels of particulate matters in both 10ug and 2.5ug data, categorize them into those 7 levels specified by US EPA (https://www.epa.gov/aqs), and then giving advice upon the worse data, telling how polluted the air in the specified City or location.
 
 ### Geo:
 
@@ -110,6 +111,13 @@ When you run the application, the swagger will open and show the different endpo
 
 ###### Kateryna - Pollen details
 ###### Kenny - Particulate Matter details
+### GET Air Quality Particulate Matter Advice
+To obtain a 5-days air quality Particulate Matter advice, append the location name or city name at the back of the API endpoint, i.e.: the API URL of querying advice for London is https://localhost:7230/api/airquality/particulatematter/london (the portion "localhost:7230" should be changed appropriately according to where this API hosts)
+
+To query via the Swagger platform, please click on the link that looks like below:
+![image](https://user-images.githubusercontent.com/111776991/198899531-76e7e818-e0f1-4b42-8f06-d64e12428b96.png)
+Click on the button ![image](https://user-images.githubusercontent.com/111745375/198905009-25718a88-99e7-4108-8025-08dca8382ec0.png) and the text box for cityName will be enabled. Enter the desired city name or location name and then click "Execute", the resultant Jsontext will then appears.
+
 ### GET Weekly Forecast
 It gives Weekly Forecast and Suggestions based on the Average Temperature along with Date, Day and Average Temperature. To get Weekly Forecast and Suggestions click on the endpoint as shown below.
 ![image](https://user-images.githubusercontent.com/111745375/198904906-1706f921-5aab-4116-a8c2-e5bbfdf46873.png)
@@ -160,4 +168,4 @@ Contributors names:
 ###### Prasanna devi Rengakrishnan
 ###### Sabitha Banu Jamal Mohamed
 ###### Shahzaib
-###### Kenny
+###### Kenny Chiang
