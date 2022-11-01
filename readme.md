@@ -36,7 +36,7 @@ The endpoints used in this application are:
 
 ![image](https://user-images.githubusercontent.com/111776991/198899531-76e7e818-e0f1-4b42-8f06-d64e12428b96.png)
 
-###### Kenny
+
 This API endpoint provides advice based on the quality and freshness of air that is quantified by the amount of particulate matters in the air. The EPA categorized the air quality into two size thresholds - >=10ug and >=2.5ug, and 7 density levels of these particulate matters exists within a cubic metre of air. This API obtains 5 days of hourly levels of particulate matters in both 10ug and 2.5ug data, categorize them into those 7 levels specified by US EPA (https://www.epa.gov/aqs), and then giving advice upon the worse data, telling how polluted the air in the specified City or location.
 
 ### Geo:
@@ -111,7 +111,7 @@ When you run the application, the swagger will open and show the different endpo
 ![image](https://user-images.githubusercontent.com/111776991/198898537-03b5530b-29c7-4d75-bb2d-ecaf184eab80.png)
 
 
-###### Kateryna - Pollen details
+
 ### GET Air Quality Pollen
 It gives the suggestions based on the hourly pollen concentration data for required city. 
 
@@ -127,7 +127,7 @@ This API endpoint will return the results as shown in the below figure.
 ![AQ2](https://user-images.githubusercontent.com/111804400/199126346-9f6653dd-a05a-4e78-9a0b-940a17eb0dfa.png)
 
 
-###### Kenny - Particulate Matter details
+
 ### GET Air Quality Particulate Matter Advice
 To obtain a 5-days air quality Particulate Matter advice, append the location name or city name at the back of the API endpoint, i.e.: the API URL of querying advice for London is https://localhost:7230/api/airquality/particulatematter/london (the portion "localhost:7230" should be changed appropriately according to where this API hosts)
 
@@ -174,7 +174,7 @@ This API endpoint will return the results as shown in the below figure.
 ![image](https://user-images.githubusercontent.com/111776991/198899185-5dc84150-c8c9-44e3-a165-6ba2e401bae2.png)
 
 
-###### Shahzaib - current Weather and suggestion details
+
 
 
 ### HealthChecks Implementation 
