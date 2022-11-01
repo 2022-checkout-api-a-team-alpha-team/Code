@@ -24,11 +24,13 @@ When we plan for a day/ days outside, we may have to consider certain factors li
 
 The endpoints used in this application are:
 ### Air Quality:
-#### 1. Suggestions based on Pollen in air:
+#### 1. Suggestions based on Air Quality Pollen:
+
+- The Endpoint 'AirQuality/Pollen by City' gives the suggestions based on the hourly pollen concentration data for required city. It communicates with public free AirQuality API and gets the response as JSON. The actual response is a list of hourly pollen (alder, birch, grass, mugwort, olive, ragweed) concentration for 5 days (120 records for each pollen type per day). Added logic for processing received data (grouping by days, searching maximal daily pollen concentration value for each of the 6 types of pollen in the air, giving suggestion).
 
 ![image](https://user-images.githubusercontent.com/111776991/198899484-a72a7884-e845-4124-bdde-be6b222c6100.png)
 
-###### Kateryna
+
 
 #### 2. Suggestions based on Particulate Matter:
 
@@ -110,6 +112,21 @@ When you run the application, the swagger will open and show the different endpo
 
 
 ###### Kateryna - Pollen details
+### GET Air Quality Pollen
+It gives the suggestions based on the hourly pollen concentration data for required city. 
+
+![image](https://user-images.githubusercontent.com/111776991/198899484-a72a7884-e845-4124-bdde-be6b222c6100.png)
+
+If you are planning to spend some time on nature and you would like to get suggestions based on Air Quality Pollen then click on the endpoint and press “Try it out” button (so the text box for cityName will be anabled).
+
+![AQ1](https://user-images.githubusercontent.com/111804400/199126334-2d50b126-c0c7-48a5-bce1-f79c54addd76.png)
+
+Enter the City Name (Location) as input in the textbox and then click the Execute button.
+This API endpoint will return the results as shown in the below figure.
+
+![AQ2](https://user-images.githubusercontent.com/111804400/199126346-9f6653dd-a05a-4e78-9a0b-940a17eb0dfa.png)
+
+
 ###### Kenny - Particulate Matter details
 ### GET Air Quality Particulate Matter Advice
 To obtain a 5-days air quality Particulate Matter advice, append the location name or city name at the back of the API endpoint, i.e.: the API URL of querying advice for London is https://localhost:7230/api/airquality/particulatematter/london (the portion "localhost:7230" should be changed appropriately according to where this API hosts)
@@ -159,6 +176,12 @@ This API endpoint will return the results as shown in the below figure.
 
 ###### Shahzaib - current Weather and suggestion details
 
+
+### HealthChecks Implementation 
+Weather API projects also includes a /health endpoint to give the health of the application. It checks the response from external API services:
+- https://geocoding-api.open-meteo.com (for GeoCoding)
+- https://api.open-meteo.com (for Weather Forecast)
+- https://air-quality-api.open-meteo.com (for Air Quality)
 
 
 ## Contributing
